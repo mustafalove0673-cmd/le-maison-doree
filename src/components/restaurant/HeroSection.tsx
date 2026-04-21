@@ -209,27 +209,27 @@ function NavBar({ show }: { show: boolean }) {
       {/* Blur backdrop */}
       <div className="absolute inset-0 bg-black/30 backdrop-blur-xl border-b border-white/[0.06]" />
 
-      <div className="relative max-w-[1400px] mx-auto px-6 md:px-10 lg:px-16">
-        <div className="flex items-center justify-between h-20 md:h-24">
+      <div className="relative max-w-[1400px] mx-auto px-4 md:px-10 lg:px-16">
+        <div className="flex items-center justify-between h-14 md:h-16">
           {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full border border-amber-400/40 flex items-center justify-center">
-              <span className="text-amber-400 text-sm font-bold" style={{ fontFamily: 'Georgia, serif' }}>
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full border border-amber-400/30 flex items-center justify-center">
+              <span className="text-amber-400 text-xs font-bold" style={{ fontFamily: 'Georgia, serif' }}>
                 M
               </span>
             </div>
             <div className="hidden sm:block">
-              <div className="text-white text-sm tracking-[0.2em] font-light">
+              <div className="text-white text-xs tracking-[0.2em] font-light">
                 LE MAISON
               </div>
-              <div className="text-amber-400/60 text-[9px] tracking-[0.4em] uppercase">
+              <div className="text-amber-400/50 text-[8px] tracking-[0.35em] uppercase">
                 Dorée
               </div>
             </div>
           </div>
 
           {/* Center Nav Links — Desktop */}
-          <nav className="hidden lg:flex items-center gap-10">
+          <nav className="hidden lg:flex items-center gap-8">
             {['Hikayemiz', 'Menü', 'Şef', 'Galeri', 'İletişim'].map((link, i) => (
               <motion.a
                 key={link}
@@ -265,8 +265,8 @@ function NavBar({ show }: { show: boolean }) {
 
             {/* CTA Button */}
             <motion.button
-              className="hidden sm:flex items-center gap-2 px-6 py-2.5 bg-amber-500/10 border border-amber-400/30
-                         text-amber-200 text-[11px] tracking-[0.2em] uppercase font-light
+              className="hidden sm:flex items-center gap-2 px-4 py-1.5 bg-amber-500/10 border border-amber-400/25
+                         text-amber-200 text-[10px] tracking-[0.2em] uppercase font-light
                          hover:bg-amber-500/20 hover:border-amber-400/50 transition-all duration-500"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={show ? { opacity: 1, scale: 1 } : {}}
@@ -278,12 +278,12 @@ function NavBar({ show }: { show: boolean }) {
 
             {/* Mobile Menu Toggle */}
             <button
-              className="lg:hidden flex flex-col gap-1.5 p-2"
+              className="lg:hidden flex flex-col gap-[3px] p-1.5"
               onClick={() => setMenuOpen(!menuOpen)}
             >
-              <span className={`w-5 h-px bg-white/60 transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[3.5px]' : ''}`} />
-              <span className={`w-5 h-px bg-white/60 transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
-              <span className={`w-5 h-px bg-white/60 transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[3.5px]' : ''}`} />
+              <span className={`w-4 h-px bg-white/50 transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[2.5px]' : ''}`} />
+              <span className={`w-4 h-px bg-white/50 transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+              <span className={`w-4 h-px bg-white/50 transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[2.5px]' : ''}`} />
             </button>
           </div>
         </div>
