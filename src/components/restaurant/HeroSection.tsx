@@ -57,7 +57,7 @@ function HeroSlider() {
             x: isTransitioning ? '2%' : '0%',
           }}
           exit={{ opacity: 0, scale: 1.15 }}
-          transition={{ duration: 1.2, ease: 'ease-out' }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
         >
           <div
             className="absolute inset-0 bg-cover bg-center"
