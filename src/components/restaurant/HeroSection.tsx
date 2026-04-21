@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 
 /* ═══════════════════════════════════════════════════════════════
@@ -138,16 +138,17 @@ function AmbientOrbs() {
 
 /* ─── Floating Golden Particles ─── */
 function GoldenDust() {
-  const particles = Array.from({ length: 50 }, (_, i) => ({
-    id: i,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-    size: Math.random() * 2.5 + 0.5,
-    duration: Math.random() * 10 + 5,
-    delay: Math.random() * 6,
-    opacity: Math.random() * 0.4 + 0.1,
-    drift: (Math.random() - 0.5) * 40,
-  }));
+  const particles = useMemo(() =>
+    Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      x: (Math.sin(i * 7.3) * 0.5 + 0.5) * 100,
+      y: (Math.cos(i * 5.1) * 0.5 + 0.5) * 100,
+      size: (i % 5) * 0.5 + 0.5,
+      duration: (i % 10) + 5,
+      delay: (i % 6),
+      opacity: ((i % 4) * 0.1) + 0.1,
+      drift: (Math.sin(i * 3.7)) * 20,
+    })), []);
 
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none">
