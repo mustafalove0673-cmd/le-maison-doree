@@ -1,16 +1,16 @@
 'use client';
 
 import { useState, useRef, useMemo, useEffect } from 'react';
-import { motion, useInView, AnimatePresence, LayoutGroup } from 'framer-motion';
+import { motion, useInView, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 /* ═══════════════════════════════════════════════════════════════
-   FULL MENU — 4 Categories × 10 Items, Search, Unique Grid
+   FULL MENU — 5 Categories × 10 Items, Search, Unique Grid
    ═══════════════════════════════════════════════════════════════ */
 
-const CATEGORIES = ['Tümü', 'Başlangıçlar', 'Ana Yemekler', 'Tatlılar', 'İçecekler'];
+const CATEGORIES = ['Tümü', 'Başlangıçlar', 'Ara Sıcaklar', 'Ana Yemekler', 'Tatlılar', 'İçecekler'];
 
 const ALL_ITEMS = [
-  // ── BAŞLANGIÇLAR ──
+  // ── BAŞLANGIÇLAR (10) ──
   { id: 1,  name: 'Izgara Midye',        desc: 'Tereyağlı sarımsak sos, parmesan kabuğu, limon',       price: '₺220',  cat: 'Başlangıçlar', img: '/menu-scallops.jpg' },
   { id: 2,  name: 'Lobster Bisque',      desc: 'Istakoz çorbası, krema köpüğü, taze nane',             price: '₺280',  cat: 'Başlangıçlar', img: '/menu-soup.jpg' },
   { id: 3,  name: 'Peynir Tabağı',       desc: 'A seçimi peynirler, incir, bal, ceviz, ekmek',          price: '₺320',  cat: 'Başlangıçlar', img: '/menu-cheese.jpg' },
@@ -22,7 +22,19 @@ const ALL_ITEMS = [
   { id: 9,  name: 'Ahtapot Salatası',    desc: 'Izgara ahtapot, cherry domates, zeytin, limon',         price: '₺250',  cat: 'Başlangıçlar', img: '/menu-scallops.jpg' },
   { id: 10, name: 'Foie Gras',           desc: 'Kaz ciğeri, karamelize elma, brioche ekmek',            price: '₺420',  cat: 'Başlangıçlar', img: '/menu-soup.jpg' },
 
-  // ── ANA YEMEKLER ──
+  // ── ARA SICAKLAR (10) ──
+  { id: 41, name: 'Enginar Kalbi',       desc: 'Izgara enginar, keçi peyniri, nar, limon sos',         price: '₺210',  cat: 'Ara Sıcaklar', img: '/menu-scallops.jpg' },
+  { id: 42, name: 'Karides Guvec',       desc: 'Domates soslu karides, kaşar, nanı ekmek',              price: '₺250',  cat: 'Ara Sıcaklar', img: '/menu-seabass.jpg' },
+  { id: 43, name: 'Mantar Sote',         desc: 'Karışık mantar, sarımsak, tereyağı, kekik',            price: '₺175',  cat: 'Ara Sıcaklar', img: '/menu-cheese.jpg' },
+  { id: 44, name: 'Izgara Sebzeler',     desc: 'Mevsim sebzeleri, balsamik glaz, roka',                 price: '₺165',  cat: 'Ara Sıcaklar', img: '/menu-scallops.jpg' },
+  { id: 45, name: 'Ton Balıklı Rulo',    desc: 'Ton balığı, Philadelphia, avokado, susam',              price: '₺230',  cat: 'Ara Sıcaklar', img: '/menu-seabass.jpg' },
+  { id: 46, name: 'Trüf Risotto',        desc: 'Arborio pirinç, siyah trüf, parmesan, krem',            price: '₺280',  cat: 'Ara Sıcaklar', img: '/menu-cheese.jpg' },
+  { id: 47, name: 'Karnıyarık Modern',   desc: 'Aubergine, kıyma, domates, béchamel',                   price: '₺195',  cat: 'Ara Sıcaklar', img: '/menu-scallops.jpg' },
+  { id: 48, name: 'Crumble Peynirli',    desc: 'Krem peynir, ıspanak, fıstık crumble',                  price: '₺200',  cat: 'Ara Sıcaklar', img: '/menu-cheese.jpg' },
+  { id: 49, name: 'Jambon Sarması',      desc: 'Serrano jambon, erik sos, roka, parmesan',             price: '₺215',  cat: 'Ara Sıcaklar', img: '/menu-steak.jpg' },
+  { id: 50, name: 'Krema Ispanak',       desc: 'Ispanak, krema, sarımsak, çıtır ekmek',                price: '₺155',  cat: 'Ara Sıcaklar', img: '/menu-soup.jpg' },
+
+  // ── ANA YEMEKLER (10) ──
   { id: 11, name: 'Wagyu Steak',         desc: 'A5 Wagyu, trüf patates püresi, mevsim sebzeleri',       price: '₺680',  cat: 'Ana Yemekler', img: '/menu-steak.jpg' },
   { id: 12, name: 'Levrek Fillesi',      desc: 'Fırında levrek, beurre blanc, kuşkonmaz, kaper',       price: '₺380',  cat: 'Ana Yemekler', img: '/menu-seabass.jpg' },
   { id: 13, name: 'Duck Confit',         desc: 'Yavaş pişirilmiş ördek, portakal sos, patates graten',   price: '₺420',  cat: 'Ana Yemekler', img: '/menu-steak.jpg' },
@@ -34,7 +46,7 @@ const ALL_ITEMS = [
   { id: 19, name: 'Chicken Ballotine',   desc: 'Boneless tavuk, daha sos, trüflü couscous',             price: '₺300',  cat: 'Ana Yemekler', img: '/menu-steak.jpg' },
   { id: 20, name: 'Seafood Platter',     desc: 'Karides, ıstakoz, ahtapot, midye, sos trio',             price: '₺580',  cat: 'Ana Yemekler', img: '/menu-scallops.jpg' },
 
-  // ── TATLILAR ──
+  // ── TATLILAR (10) ──
   { id: 21, name: 'Çikolata Fondan',     desc: 'Sıcak çikolata, ahududu, altın yaprak, dondurma',       price: '₺180',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
   { id: 22, name: 'Crème Brûlée',        desc: 'Vanilya krem, karamelize şeker, taze meyve',            price: '₺150',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
   { id: 23, name: 'Tiramisu',            desc: 'Klasik İtalyan, espresso, mascarpone, kakao',            price: '₺160',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
@@ -46,7 +58,7 @@ const ALL_ITEMS = [
   { id: 29, name: 'Künefe',             desc: 'Geleneksel künefe, kaymak, antep fıstığı',                price: '₺165',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
   { id: 30, name: 'Cheesecake',          desc: 'New York cheesecake, yaban mersini kompotu',             price: '₺150',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
 
-  // ── İÇECEKLER ──
+  // ── İÇECEKLER (10) ──
   { id: 31, name: 'Smoky Old Fashioned', desc: 'Bourbon, şeker, bitter, duman efektli',                 price: '₺180',  cat: 'İçecekler', img: '/menu-cocktail1.jpg' },
   { id: 32, name: 'Château Margaux',     desc: '2015 Bordeaux, kırmızı meyve, vanilya notları',           price: '₺950',  cat: 'İçecekler', img: '/menu-wine.jpg' },
   { id: 33, name: 'Tropical Sunset',     desc: 'Mango, ananas, hindistan cevizi, lime',                  price: '₺120',  cat: 'İçecekler', img: '/menu-mocktail.jpg' },
@@ -159,114 +171,298 @@ function CategoryFilter({ active, onChange }: { active: string; onChange: (c: st
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MENU CARD — Unique Staggered Design
+   ROW SEPARATOR — decorative divider between row pairs
    ═══════════════════════════════════════════════════════════════ */
-function MenuCard({ item, index }: { item: typeof ALL_ITEMS[0]; index: number }) {
+function RowSeparator({ rowIndex }: { rowIndex: number }) {
+  const ref = useRef(null);
+  const v = useInView(ref, { once: true, margin: '-20px' });
+  const styles = [
+    // Style 0: Classic line with diamond center
+    <div key="s0" className="flex items-center justify-center gap-4 py-6 md:py-8">
+      <div className="flex-1 max-w-[120px] h-px bg-gradient-to-r from-transparent via-amber-400/25 to-amber-400/25" />
+      <Diamond size={7} color="rgba(245,158,11,0.35)" />
+      <div className="w-2 h-2 rounded-full border border-amber-400/20" />
+      <Diamond size={7} color="rgba(245,158,11,0.35)" />
+      <div className="flex-1 max-w-[120px] h-px bg-gradient-to-l from-transparent via-amber-400/25 to-amber-400/25" />
+    </div>,
+    // Style 1: Text divider
+    <div key="s1" className="flex items-center justify-center gap-5 py-6 md:py-8">
+      <div className="flex-1 max-w-[100px] h-px bg-gradient-to-r from-transparent to-white/8" />
+      <span className="text-[9px] tracking-[0.5em] uppercase text-white/15 font-light whitespace-nowrap">✦</span>
+      <div className="flex-1 max-w-[100px] h-px bg-gradient-to-l from-transparent to-white/8" />
+    </div>,
+    // Style 2: Three dots
+    <div key="s2" className="flex items-center justify-center gap-3 py-6 md:py-8">
+      <div className="w-1 h-1 rounded-full bg-amber-400/20" />
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-400/30" />
+      <div className="w-2 h-2 rounded-full bg-amber-400/40" />
+      <div className="w-1.5 h-1.5 rounded-full bg-amber-400/30" />
+      <div className="w-1 h-1 rounded-full bg-amber-400/20" />
+    </div>,
+    // Style 3: Cross + lines
+    <div key="s3" className="flex items-center justify-center gap-4 py-6 md:py-8">
+      <div className="flex-1 max-w-[80px] h-px bg-gradient-to-r from-transparent via-white/6" />
+      <div className="w-3 h-3 relative">
+        <div className="absolute top-1/2 left-0 w-full h-px -translate-y-1/2 bg-amber-400/20" />
+        <div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-amber-400/20" />
+      </div>
+      <div className="flex-1 max-w-[80px] h-px bg-gradient-to-l from-transparent via-white/6" />
+    </div>,
+  ];
+
+  return (
+    <motion.div ref={ref}
+      initial={{ opacity: 0, scaleX: 0.5 }}
+      animate={v ? { opacity: 1, scaleX: 1 } : {}}
+      transition={{ duration: 0.8 }}>
+      {styles[rowIndex % styles.length]}
+    </motion.div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3D TILT HOOK — for card mouse-follow effect
+   ═══════════════════════════════════════════════════════════════ */
+function use3DTilt() {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const springX = useSpring(x, { stiffness: 150, damping: 20 });
+  const springY = useSpring(y, { stiffness: 150, damping: 20 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) / rect.width * -8);
+    y.set((e.clientY - centerY) / rect.height * 8);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return { springX, springY, handleMouseMove, handleMouseLeave };
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   CARD STYLE A — Full image overlay with glow (rows 0, 2, 4...)
+   ═══════════════════════════════════════════════════════════════ */
+function CardStyleA({ item, index }: { item: typeof ALL_ITEMS[0]; index: number }) {
   const ref = useRef(null);
   const v = useInView(ref, { once: true, margin: '-30px' });
   const [hover, setHover] = useState(false);
-
-  // Stagger: even rows normal, odd rows slightly offset
-  const isOddRow = Math.floor(index / 2) % 2 === 1;
-  const isRight = index % 2 === 1;
+  const { springX, springY, handleMouseMove, handleMouseLeave } = use3DTilt();
 
   return (
     <motion.div ref={ref}
       layout
-      initial={{ opacity: 0, y: 50, scale: 0.95 }}
-      animate={v ? { opacity: 1, y: isOddRow ? (isRight ? 16 : -16) : 0, scale: 1 } : {}}
+      initial={{ opacity: 0, y: 60, scale: 0.94 }}
+      animate={v ? { opacity: 1, y: 0, scale: 1 } : {}}
       exit={{ opacity: 0, scale: 0.9, y: -20 }}
-      transition={{ duration: 0.6, delay: (index % 4) * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      transition={{ duration: 0.65, delay: (index % 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      style={{ perspective: 800 }}
       onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseLeave={() => { setHover(false); handleMouseLeave(); }}
+      onMouseMove={handleMouseMove}
       className="w-full"
     >
-      <div className="group relative overflow-hidden rounded-xl"
-        style={{
-          background: hover ? '#12100c' : '#0c0a08',
-          border: `1px solid ${hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.05)'}`,
-          transition: 'all 0.5s ease',
-          transform: hover ? 'translateY(-4px)' : 'translateY(0)',
-          boxShadow: hover ? '0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(245,158,11,0.05)' : 'none',
-        }}>
+      <motion.div
+        style={{ rotateX: springY, rotateY: springX, transformStyle: 'preserve-3d' }}
+        className="group relative overflow-hidden rounded-2xl"
+      >
+        <div className="relative aspect-[4/5] overflow-hidden"
+          style={{
+            border: `1px solid ${hover ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.04)'}`,
+            borderRadius: 16,
+            boxShadow: hover ? '0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(245,158,11,0.06)' : '0 4px 20px rgba(0,0,0,0.3)',
+            transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
+          }}>
 
-        {/* ── Image ── */}
-        <div className="relative aspect-[3/4] overflow-hidden">
+          {/* Image */}
           <motion.div className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${item.img})` }}
-            animate={{ scale: hover ? 1.1 : 1, filter: hover ? 'brightness(0.7) saturate(1.15)' : 'brightness(0.8) saturate(1)' }}
+            animate={{ scale: hover ? 1.12 : 1, filter: hover ? 'brightness(0.6) saturate(1.2)' : 'brightness(0.75) saturate(1)' }}
             transition={{ duration: 0.7 }} />
 
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0c0a08] via-[#0c0a08]/20 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-[#0c0a08]/40 via-transparent to-transparent" />
+          {/* Multi-layer gradient */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
 
-          {/* Category label */}
-          <div className="absolute top-3 left-3 z-10">
-            <span className="px-2.5 py-1 rounded text-[8px] tracking-[0.25em] uppercase font-semibold"
-              style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)' }}>
+          {/* Corner accent */}
+          <motion.div className="absolute top-0 right-0 w-24 h-24"
+            style={{ background: 'radial-gradient(circle at top right, rgba(245,158,11,0.08) 0%, transparent 70%)' }}
+            animate={{ opacity: hover ? 1 : 0.3 }} />
+
+          {/* Category tag */}
+          <div className="absolute top-4 left-4 z-10">
+            <span className="px-3 py-1.5 rounded-lg text-[8px] tracking-[0.3em] uppercase font-semibold backdrop-blur-md"
+              style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
               {item.cat}
             </span>
           </div>
 
           {/* Order number */}
-          <motion.div className="absolute top-3 right-3 z-10"
-            animate={{ opacity: hover ? 0.6 : 0.12 }}
-            transition={{ duration: 0.3 }}>
-            <span className="text-white text-xl font-extralight" style={{ fontFamily: 'Georgia, serif' }}>0{index + 1}</span>
+          <motion.div className="absolute top-4 right-4 z-10"
+            animate={{ opacity: hover ? 0.7 : 0.15, y: hover ? -2 : 0 }} transition={{ duration: 0.3 }}>
+            <span className="text-white text-2xl font-extralight" style={{ fontFamily: 'Georgia, serif' }}>0{((index % 10) + 1)}</span>
           </motion.div>
 
-          {/* ── Content overlay ── */}
-          <div className="absolute bottom-0 left-0 right-0 z-10 p-4 md:p-5">
-            {/* Name */}
-            <h3 className="text-white text-lg md:text-xl font-light tracking-wide mb-1 transition-colors duration-300"
-              style={{ color: hover ? 'rgba(253,230,138,0.9)' : 'rgba(255,255,255,0.85)' }}>
+          {/* Content */}
+          <div className="absolute bottom-0 left-0 right-0 z-10 p-5 md:p-6">
+            {/* Shimmer line on hover */}
+            <motion.div className="absolute top-0 left-0 right-0 h-px"
+              style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(245,158,11,0.6) 50%, transparent 100%)' }}
+              animate={{ opacity: hover ? 1 : 0, scaleX: hover ? 1 : 0 }}
+              transition={{ duration: 0.5 }} />
+
+            <motion.h3 className="text-white text-xl md:text-2xl font-light tracking-wide mb-1.5 transition-colors duration-300"
+              animate={{ x: hover ? 4 : 0 }}
+              style={{ color: hover ? 'rgba(253,230,138,0.95)' : 'rgba(255,255,255,0.9)', fontFamily: 'Georgia, serif' }}>
               {item.name}
-            </h3>
+            </motion.h3>
 
-            {/* Desc */}
-            <p className="text-white/30 text-[11px] md:text-xs font-light leading-relaxed mb-3"
-              style={{ opacity: hover ? 0.6 : 0.4 }}>
+            <motion.p className="text-white/35 text-xs font-light leading-relaxed mb-4 transition-opacity duration-300"
+              animate={{ opacity: hover ? 0.7 : 0.4 }}>
               {item.desc}
-            </p>
+            </motion.p>
 
-            {/* Bottom row */}
             <div className="flex items-end justify-between">
-              {/* Price */}
-              <motion.span className="text-amber-300 text-xl md:text-2xl font-light"
-                animate={{ scale: hover ? 1.05 : 1 }} transition={{ duration: 0.3 }}>
+              <motion.span className="text-amber-300 text-2xl md:text-3xl font-extralight"
+                animate={{ scale: hover ? 1.08 : 1, letterSpacing: hover ? '0.05em' : '0em' }}
+                transition={{ duration: 0.3 }}>
                 {item.price}
               </motion.span>
 
-              {/* Action buttons */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2.5">
                 <a href={waLink(item)} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300"
+                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-400"
                   style={{
-                    background: hover ? 'rgba(37,211,102,0.2)' : 'rgba(37,211,102,0.08)',
-                    border: `1px solid ${hover ? 'rgba(37,211,102,0.4)' : 'rgba(37,211,102,0.15)'}`,
+                    background: hover ? 'rgba(37,211,102,0.2)' : 'rgba(37,211,102,0.06)',
+                    border: `1px solid ${hover ? 'rgba(37,211,102,0.4)' : 'rgba(37,211,102,0.12)'}`,
+                    transform: hover ? 'translateY(-2px)' : 'translateY(0)',
+                    transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
                   }}>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                   </svg>
+                  <span className="text-[#4ADE80] text-[8px] tracking-[0.15em] uppercase font-semibold">Sipariş</span>
                 </a>
-                <button className="flex items-center justify-center w-9 h-9 rounded-lg transition-all duration-300"
-                  style={{
-                    background: hover ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.03)',
-                    border: `1px solid ${hover ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)'}`,
-                  }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={hover ? 'rgba(255,255,255,0.7)' : 'rgba(255,255,255,0.3)'} strokeWidth="2" className="transition-colors duration-300">
-                    <path d="M5 12h14M12 5l7 7-7 7" />
-                  </svg>
-                </button>
               </div>
             </div>
           </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
 
-          {/* Hover: glow border line */}
+/* ═══════════════════════════════════════════════════════════════
+   CARD STYLE B — Split layout: image left, content right (rows 1, 3, 5...)
+   ═══════════════════════════════════════════════════════════════ */
+function CardStyleB({ item, index }: { item: typeof ALL_ITEMS[0]; index: number }) {
+  const ref = useRef(null);
+  const v = useInView(ref, { once: true, margin: '-30px' });
+  const [hover, setHover] = useState(false);
+  const isRight = index % 2 === 1;
+
+  return (
+    <motion.div ref={ref}
+      layout
+      initial={{ opacity: 0, x: isRight ? 60 : -60, scale: 0.96 }}
+      animate={v ? { opacity: 1, x: 0, scale: 1 } : {}}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.7, delay: (index % 4) * 0.06, ease: [0.16, 1, 0.3, 1] }}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className="w-full"
+    >
+      <div className="group relative overflow-hidden rounded-2xl flex"
+        style={{
+          background: hover ? '#110d08' : '#0a0806',
+          border: `1px solid ${hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.04)'}`,
+          borderRadius: 16,
+          boxShadow: hover ? '0 20px 50px rgba(0,0,0,0.5)' : '0 4px 15px rgba(0,0,0,0.25)',
+          transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
+          transform: hover ? 'translateY(-3px)' : 'translateY(0)',
+        }}>
+
+        {/* Left image portion */}
+        <div className="relative w-[42%] overflow-hidden" style={{ borderRadius: isRight ? '0 0 0 16px' : '0 0 16px 0' }}>
+          <motion.div className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${item.img})` }}
+            animate={{ scale: hover ? 1.1 : 1, filter: hover ? 'brightness(0.7)' : 'brightness(0.85)' }}
+            transition={{ duration: 0.6 }} />
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0806]" />
+
+          {/* Floating price badge */}
+          <motion.div className="absolute top-3 left-3 z-10"
+            animate={{ scale: hover ? 1.1 : 1, opacity: hover ? 1 : 0.7 }}
+            transition={{ duration: 0.3 }}>
+            <div className="px-2.5 py-1 rounded-lg backdrop-blur-md"
+              style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(245,158,11,0.2)' }}>
+              <span className="text-amber-300 text-sm font-light">{item.price}</span>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Right content portion */}
+        <div className="flex-1 p-5 md:p-6 flex flex-col justify-between relative">
+          {/* Decorative dot pattern */}
+          <div className="absolute top-3 right-3 opacity-20">
+            <div className="grid grid-cols-3 gap-1.5">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="w-1 h-1 rounded-full bg-amber-400/40" />
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <span className="text-[8px] tracking-[0.35em] uppercase font-medium"
+              style={{ color: hover ? 'rgba(245,158,11,0.6)' : 'rgba(255,255,255,0.25)' }}>
+              {item.cat}
+            </span>
+            <motion.h3 className="text-white text-lg md:text-xl font-light tracking-wide mt-2 mb-2 transition-colors duration-300"
+              animate={{ x: hover ? 6 : 0 }}
+              style={{ color: hover ? 'rgba(253,230,138,0.95)' : 'rgba(255,255,255,0.85)', fontFamily: 'Georgia, serif' }}>
+              {item.name}
+            </motion.h3>
+            <p className="text-white/30 text-[11px] font-light leading-relaxed"
+              style={{ opacity: hover ? 0.6 : 0.4 }}>
+              {item.desc}
+            </p>
+          </div>
+
+          <div className="flex items-center justify-between mt-4">
+            <a href={waLink(item)} target="_blank" rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-400"
+              style={{
+                background: hover ? 'rgba(37,211,102,0.2)' : 'rgba(37,211,102,0.06)',
+                border: `1px solid ${hover ? 'rgba(37,211,102,0.4)' : 'rgba(37,211,102,0.12)'}`,
+                transform: hover ? 'translateX(4px)' : 'translateX(0)',
+                transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
+              }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+              </svg>
+              <span className="text-[#4ADE80] text-[8px] tracking-[0.15em] uppercase font-semibold">WhatsApp</span>
+            </a>
+
+            <motion.button className="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-400"
+              style={{
+                background: hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.02)',
+                border: `1px solid ${hover ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.05)'}`,
+              }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={hover ? 'rgba(245,158,11,0.8)' : 'rgba(255,255,255,0.25)'} strokeWidth="1.5" className="transition-colors duration-300">
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </motion.button>
+          </div>
+
+          {/* Bottom glow line */}
           <motion.div className="absolute bottom-0 left-0 right-0 h-px"
-            style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.5), transparent)' }}
-            animate={{ scaleX: hover ? 1 : 0 }} transition={{ duration: 0.4 }} />
+            style={{ background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.4), transparent)' }}
+            animate={{ scaleX: hover ? 1 : 0 }} transition={{ duration: 0.5 }} />
         </div>
       </div>
     </motion.div>
@@ -330,6 +526,22 @@ function TastingBanner() {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+   ROW RENDERER — picks style A or B alternating per 2-row block
+   ═══════════════════════════════════════════════════════════════ */
+function MenuRow({ items, rowIndex, startIdx }: { items: typeof ALL_ITEMS[]; rowIndex: number; startIdx: number }) {
+  const styleType = rowIndex % 2 === 0 ? 'A' : 'B';
+  const CardComponent = styleType === 'A' ? CardStyleA : CardStyleB;
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+      {items.map((item, i) => (
+        <CardComponent key={item.id} item={item} index={startIdx + i} />
+      ))}
+    </div>
+  );
+}
+
+/* ═══════════════════════════════════════════════════════════════
    MAIN MENU SECTION
    ═══════════════════════════════════════════════════════════════ */
 export default function MenuSection() {
@@ -349,20 +561,36 @@ export default function MenuSection() {
     return items;
   }, [active, search]);
 
+  // Group items into rows of 2
+  const rows = useMemo(() => {
+    const result: { items: typeof ALL_ITEMS[]; rowIndex: number; startIdx: number }[] = [];
+    for (let i = 0; i < filtered.length; i += 2) {
+      result.push({
+        items: filtered.slice(i, i + 2),
+        rowIndex: Math.floor(i / 2),
+        startIdx: i,
+      });
+    }
+    return result;
+  }, [filtered]);
+
   return (
     <section id="menu" className="relative py-20 md:py-28 lg:py-36 overflow-hidden"
       style={{ background: 'linear-gradient(180deg, #050505, #0a0806, #050505)' }}>
 
-      {/* BG */}
+      {/* BG noise texture */}
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', mixBlendMode: 'overlay' }} />
 
+      {/* Top/bottom border lines */}
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/10 to-transparent" />
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/10 to-transparent" />
 
-      {/* Floating */}
+      {/* Floating diamonds */}
       <motion.div className="absolute top-20 left-[4%] pointer-events-none opacity-10" animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }} transition={{ duration: 12, repeat: Infinity }}><Diamond size={10} color="rgba(245,158,11,0.2)" /></motion.div>
       <motion.div className="absolute bottom-32 right-[5%] pointer-events-none opacity-8" animate={{ y: [0, 10, 0] }} transition={{ duration: 10, repeat: Infinity }}><Diamond size={8} color="rgba(245,158,11,0.15)" /></motion.div>
+      <motion.div className="absolute top-1/2 left-[2%] pointer-events-none opacity-6" animate={{ y: [0, -8, 0], rotate: [0, 90, 0] }} transition={{ duration: 16, repeat: Infinity }}><Diamond size={6} color="rgba(255,255,255,0.1)" /></motion.div>
+      <motion.div className="absolute top-1/3 right-[3%] pointer-events-none opacity-6" animate={{ y: [0, 6, 0] }} transition={{ duration: 14, repeat: Infinity }}><Diamond size={12} color="rgba(245,158,11,0.08)" /></motion.div>
 
       <div className="relative z-10 max-w-[1200px] mx-auto px-4 md:px-8 lg:px-12">
         <SectionHeader />
@@ -375,16 +603,24 @@ export default function MenuSection() {
           </motion.div>
         </AnimatePresence>
 
-        {/* ── 2x Grid with staggered offset ── */}
-        <LayoutGroup>
-          <motion.div layout className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
-            <AnimatePresence>
-              {filtered.map((item, i) => (
-                <MenuCard key={item.id} item={item} index={i} />
-              ))}
-            </AnimatePresence>
+        {/* ── Grid with alternating row styles ── */}
+        <AnimatePresence mode="wait">
+          <motion.div key={`${active}-${search}-grid`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 0.2 } }}
+            transition={{ duration: 0.3 }}>
+            {rows.map((row, rowIdx) => (
+              <div key={`row-${row.startIdx}`}>
+                {/* Separator between row blocks (every 2 rows = 4 items) */}
+                {rowIdx > 0 && rowIdx % 2 === 0 && (
+                  <RowSeparator rowIndex={Math.floor(rowIdx / 2)} />
+                )}
+                <MenuRow items={row.items} rowIndex={row.rowIndex} startIdx={row.startIdx} />
+              </div>
+            ))}
           </motion.div>
-        </LayoutGroup>
+        </AnimatePresence>
 
         {filtered.length === 0 && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-20">

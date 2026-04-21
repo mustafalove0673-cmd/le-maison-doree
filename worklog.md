@@ -31,3 +31,29 @@ Stage Summary:
 - Hero bölümü büyük, dolu, zengin tasarımla tamamlandı
 - Tüm bileşenler /src/components/restaurant/HeroSection.tsx dosyasında
 - Sayfa sağ panelde görüntülenebilir durumda
+
+---
+Task ID: 2
+Agent: Main Agent
+Task: Menü bölümünü 5 kategoriye genişlet, 50 ürün, arama, farklı satır tasarımları, animasyonlar
+
+Work Log:
+- MenuSection.tsx tamamen yeniden yazıldı
+- 5 kategori eklendi: Başlangıçlar (10), Ara Sıcaklar (10), Ana Yemekler (10), Tatlılar (10), İçecekler (10) = 50 ürün toplam
+- Arama çubuğu (search) eklendi - isim, açıklama ve kategori bazında arama
+- 2 farklı kart tasarımı oluşturuldu:
+  - CardStyleA: Tam görsel overlay, 3D tilt efektli, parlama efekti (çift satırlar için)
+  - CardStyleB: Split layout (sol görsel + sağ içerik), kayan animasyonlar (tek satırlar için)
+- Satırlar arası dekoratif ayırıcılar (RowSeparator) eklendi - 4 farklı stil
+- WhatsApp butonu tüm kartlarda mevcut, önceden doldurulmuş mesajla
+- Kategori filtreleri animasyonlu geçişlerle çalışıyor
+- Tasting Menu banner korundu
+- Build başarılı, tüm animasyonlar Framer Motion v12 uyumlu (camelCase easing)
+
+Stage Summary:
+- /src/components/restaurant/MenuSection.tsx güncellendi
+- 5 kategori × 10 ürün = 50 toplam ürün
+- 2 farklı kart stili, satır bazlı dönüşümlü
+- 3D tilt efekti, hover animasyonları, geçiş efektleri
+- Arama çubuğu çalışır durumda
+- Ön izleme aktif: http://localhost:3000
