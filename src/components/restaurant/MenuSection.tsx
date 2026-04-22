@@ -269,13 +269,13 @@ function CardStyleA({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
     >
       <motion.div
         style={{ rotateX: springY, rotateY: springX, transformStyle: 'preserve-3d' }}
-        className="group relative overflow-hidden rounded-2xl"
+        className="group relative overflow-hidden rounded-xl"
       >
-        <div className="relative aspect-[4/5] overflow-hidden"
+        <div className="relative aspect-[3/2] overflow-hidden"
           style={{
             border: `1px solid ${hover ? 'rgba(245,158,11,0.2)' : 'rgba(255,255,255,0.04)'}`,
-            borderRadius: 16,
-            boxShadow: hover ? '0 25px 60px rgba(0,0,0,0.6), 0 0 40px rgba(245,158,11,0.06)' : '0 4px 20px rgba(0,0,0,0.3)',
+            borderRadius: 12,
+            boxShadow: hover ? '0 15px 35px rgba(0,0,0,0.5), 0 0 25px rgba(245,158,11,0.05)' : '0 2px 12px rgba(0,0,0,0.3)',
             transition: 'all 0.6s cubic-bezier(0.16,1,0.3,1)',
           }}>
 
@@ -295,40 +295,40 @@ function CardStyleA({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
             animate={{ opacity: hover ? 1 : 0.3 }} />
 
           {/* Category tag */}
-          <div className="absolute top-4 left-4 z-10">
-            <span className="px-3 py-1.5 rounded-lg text-[8px] tracking-[0.3em] uppercase font-semibold backdrop-blur-md"
+          <div className="absolute top-2.5 left-2.5 z-10">
+            <span className="px-2 py-1 rounded-md text-[7px] tracking-[0.25em] uppercase font-semibold backdrop-blur-md"
               style={{ background: 'rgba(0,0,0,0.5)', border: '1px solid rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.5)' }}>
               {item.cat}
             </span>
           </div>
 
           {/* Order number */}
-          <motion.div className="absolute top-4 right-4 z-10"
+          <motion.div className="absolute top-2.5 right-2.5 z-10"
             animate={{ opacity: hover ? 0.7 : 0.15, y: hover ? -2 : 0 }} transition={{ duration: 0.3 }}>
-            <span className="text-white text-2xl font-extralight" style={{ fontFamily: 'Georgia, serif' }}>0{((index % 10) + 1)}</span>
+            <span className="text-white text-lg font-extralight" style={{ fontFamily: 'Georgia, serif' }}>0{((index % 10) + 1)}</span>
           </motion.div>
 
           {/* Content */}
-          <div className="absolute bottom-0 left-0 right-0 z-10 p-5 md:p-6">
+          <div className="absolute bottom-0 left-0 right-0 z-10 p-3 md:p-4">
             {/* Shimmer line on hover */}
             <motion.div className="absolute top-0 left-0 right-0 h-px"
               style={{ background: 'linear-gradient(90deg, transparent 0%, rgba(245,158,11,0.6) 50%, transparent 100%)' }}
               animate={{ opacity: hover ? 1 : 0, scaleX: hover ? 1 : 0 }}
               transition={{ duration: 0.5 }} />
 
-            <motion.h3 className="text-white text-xl md:text-2xl font-light tracking-wide mb-1.5 transition-colors duration-300"
+            <motion.h3 className="text-white text-sm md:text-base font-light tracking-wide mb-0.5 transition-colors duration-300"
               animate={{ x: hover ? 4 : 0 }}
               style={{ color: hover ? 'rgba(253,230,138,0.95)' : 'rgba(255,255,255,0.9)', fontFamily: 'Georgia, serif' }}>
               {item.name}
             </motion.h3>
 
-            <motion.p className="text-white/35 text-xs font-light leading-relaxed mb-4 transition-opacity duration-300"
+            <motion.p className="text-white/30 text-[10px] md:text-[11px] font-light leading-snug mb-2 transition-opacity duration-300"
               animate={{ opacity: hover ? 0.7 : 0.4 }}>
               {item.desc}
             </motion.p>
 
             <div className="flex items-end justify-between">
-              <motion.span className="text-amber-300 text-2xl md:text-3xl font-extralight"
+              <motion.span className="text-amber-300 text-base md:text-lg font-extralight"
                 animate={{ scale: hover ? 1.08 : 1, letterSpacing: hover ? '0.05em' : '0em' }}
                 transition={{ duration: 0.3 }}>
                 {item.price}
@@ -336,17 +336,17 @@ function CardStyleA({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
 
               <div className="flex items-center gap-2.5">
                 <a href={waLink(item)} target="_blank" rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-400"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-400"
                   style={{
                     background: hover ? 'rgba(37,211,102,0.2)' : 'rgba(37,211,102,0.06)',
                     border: `1px solid ${hover ? 'rgba(37,211,102,0.4)' : 'rgba(37,211,102,0.12)'}`,
                     transform: hover ? 'translateY(-2px)' : 'translateY(0)',
                     transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
                   }}>
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
                     <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
                   </svg>
-                  <span className="text-[#4ADE80] text-[8px] tracking-[0.15em] uppercase font-semibold">Sipariş</span>
+                  <span className="text-[#4ADE80] text-[7px] tracking-[0.12em] uppercase font-semibold">Sipariş</span>
                 </a>
               </div>
             </div>
@@ -377,18 +377,18 @@ function CardStyleB({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
       onMouseLeave={() => setHover(false)}
       className="w-full"
     >
-      <div className="group relative overflow-hidden rounded-2xl flex"
+      <div className="group relative overflow-hidden rounded-xl flex"
         style={{
           background: hover ? '#110d08' : '#0a0806',
           border: `1px solid ${hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.04)'}`,
-          borderRadius: 16,
-          boxShadow: hover ? '0 20px 50px rgba(0,0,0,0.5)' : '0 4px 15px rgba(0,0,0,0.25)',
+          borderRadius: 12,
+          boxShadow: hover ? '0 12px 30px rgba(0,0,0,0.4)' : '0 2px 10px rgba(0,0,0,0.25)',
           transition: 'all 0.5s cubic-bezier(0.16,1,0.3,1)',
           transform: hover ? 'translateY(-3px)' : 'translateY(0)',
         }}>
 
         {/* Left image portion */}
-        <div className="relative w-[42%] overflow-hidden" style={{ borderRadius: isRight ? '0 0 0 16px' : '0 0 16px 0' }}>
+        <div className="relative w-[38%] overflow-hidden" style={{ borderRadius: '12px 0 0 12px' }}>
           <motion.div className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${item.img})` }}
             animate={{ scale: hover ? 1.1 : 1, filter: hover ? 'brightness(0.7)' : 'brightness(0.85)' }}
@@ -396,20 +396,20 @@ function CardStyleB({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
           <div className="absolute inset-0 bg-gradient-to-r from-transparent to-[#0a0806]" />
 
           {/* Floating price badge */}
-          <motion.div className="absolute top-3 left-3 z-10"
+          <motion.div className="absolute top-2 left-2 z-10"
             animate={{ scale: hover ? 1.1 : 1, opacity: hover ? 1 : 0.7 }}
             transition={{ duration: 0.3 }}>
-            <div className="px-2.5 py-1 rounded-lg backdrop-blur-md"
+            <div className="px-2 py-0.5 rounded-md backdrop-blur-md"
               style={{ background: 'rgba(0,0,0,0.6)', border: '1px solid rgba(245,158,11,0.2)' }}>
-              <span className="text-amber-300 text-sm font-light">{item.price}</span>
+              <span className="text-amber-300 text-xs font-light">{item.price}</span>
             </div>
           </motion.div>
         </div>
 
         {/* Right content portion */}
-        <div className="flex-1 p-5 md:p-6 flex flex-col justify-between relative">
+        <div className="flex-1 p-3 md:p-3.5 flex flex-col justify-between relative">
           {/* Decorative dot pattern */}
-          <div className="absolute top-3 right-3 opacity-20">
+          <div className="absolute top-2 right-2 opacity-20">
             <div className="grid grid-cols-3 gap-1.5">
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="w-1 h-1 rounded-full bg-amber-400/40" />
@@ -418,42 +418,42 @@ function CardStyleB({ item, index }: { item: typeof ALL_ITEMS[0]; index: number 
           </div>
 
           <div>
-            <span className="text-[8px] tracking-[0.35em] uppercase font-medium"
+            <span className="text-[7px] tracking-[0.3em] uppercase font-medium"
               style={{ color: hover ? 'rgba(245,158,11,0.6)' : 'rgba(255,255,255,0.25)' }}>
               {item.cat}
             </span>
-            <motion.h3 className="text-white text-lg md:text-xl font-light tracking-wide mt-2 mb-2 transition-colors duration-300"
+            <motion.h3 className="text-white text-sm md:text-base font-light tracking-wide mt-1.5 mb-1 transition-colors duration-300"
               animate={{ x: hover ? 6 : 0 }}
               style={{ color: hover ? 'rgba(253,230,138,0.95)' : 'rgba(255,255,255,0.85)', fontFamily: 'Georgia, serif' }}>
               {item.name}
             </motion.h3>
-            <p className="text-white/30 text-[11px] font-light leading-relaxed"
+            <p className="text-white/25 text-[10px] font-light leading-snug"
               style={{ opacity: hover ? 0.6 : 0.4 }}>
               {item.desc}
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center justify-between mt-2.5">
             <a href={waLink(item)} target="_blank" rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl transition-all duration-400"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition-all duration-400"
               style={{
                 background: hover ? 'rgba(37,211,102,0.2)' : 'rgba(37,211,102,0.06)',
                 border: `1px solid ${hover ? 'rgba(37,211,102,0.4)' : 'rgba(37,211,102,0.12)'}`,
                 transform: hover ? 'translateX(4px)' : 'translateX(0)',
                 transition: 'all 0.4s cubic-bezier(0.16,1,0.3,1)',
               }}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill={hover ? '#4ADE80' : 'rgba(74,222,128,0.5)'} className="transition-colors duration-300">
                 <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
               </svg>
-              <span className="text-[#4ADE80] text-[8px] tracking-[0.15em] uppercase font-semibold">WhatsApp</span>
+              <span className="text-[#4ADE80] text-[7px] tracking-[0.12em] uppercase font-semibold">WhatsApp</span>
             </a>
 
-            <motion.button className="flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-400"
+            <motion.button className="flex items-center justify-center w-8 h-8 rounded-lg transition-all duration-400"
               style={{
                 background: hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.02)',
                 border: `1px solid ${hover ? 'rgba(245,158,11,0.3)' : 'rgba(255,255,255,0.05)'}`,
               }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={hover ? 'rgba(245,158,11,0.8)' : 'rgba(255,255,255,0.25)'} strokeWidth="1.5" className="transition-colors duration-300">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={hover ? 'rgba(245,158,11,0.8)' : 'rgba(255,255,255,0.25)'} strokeWidth="1.5" className="transition-colors duration-300">
                 <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
             </motion.button>
@@ -533,7 +533,7 @@ function MenuRow({ items, rowIndex, startIdx }: { items: typeof ALL_ITEMS[]; row
   const CardComponent = styleType === 'A' ? CardStyleA : CardStyleB;
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
+    <div className="grid grid-cols-2 gap-3 md:gap-4">
       {items.map((item, i) => (
         <CardComponent key={item.id} item={item} index={startIdx + i} />
       ))}
