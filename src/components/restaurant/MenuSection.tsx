@@ -3,7 +3,7 @@
 import { useState, useRef, useMemo } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 
-const CATEGORIES = ['Tümü', 'Başlangıçlar', 'Ara Sıcaklar', 'Ana Yemekler', 'Tatlılar', 'İçecekler'];
+const CATEGORIES = ['Başlangıçlar', 'Ara Sıcaklar', 'Ana Yemekler', 'Tatlılar', 'İçecekler'];
 
 const ALL_ITEMS = [
   { id: 1,  name: 'Izgara Midye',        desc: 'Tereyağlı sarımsak sos, parmesan, limon',       price: '₺220',  cat: 'Başlangıçlar', img: '/menu-scallops.jpg' },
@@ -460,11 +460,11 @@ function TastingBanner() {
    MAIN
    ═══════════════════════════════════════════════════ */
 export default function MenuSection() {
-  const [active, setActive] = useState('Tümü');
+  const [active, setActive] = useState('Başlangıçlar');
   const [search, setSearch] = useState('');
 
   const filtered = useMemo(() => {
-    let items = active === 'Tümü' ? ALL_ITEMS : ALL_ITEMS.filter(i => i.cat === active);
+    let items = ALL_ITEMS.filter(i => i.cat === active);
     if (search.trim()) {
       const q = search.toLowerCase();
       items = items.filter(i =>
@@ -476,26 +476,15 @@ export default function MenuSection() {
 
   // Group items by category for display with ad banners
   const sections = useMemo(() => {
-    if (active !== 'Tümü') {
-      // Single category: show items in 2-col grid with ad after 5th
-      return [{
-        cat: active,
-        items: filtered,
-        showTitle: false,
-      }];
-    }
-    // All categories: group by cat, show title for each
-    const grouped: { cat: string; items: typeof ALL_ITEMS[]; showTitle: boolean }[] = [];
-    const catOrder = ['Başlangıçlar', 'Ara Sıcaklar', 'Ana Yemekler', 'Tatlılar', 'İçecekler'];
-    catOrder.forEach(cat => {
-      const items = filtered.filter(i => i.cat === cat);
-      if (items.length > 0) grouped.push({ cat, items, showTitle: true });
-    });
-    return grouped;
+    return [{
+      cat: active,
+      items: filtered,
+      showTitle: false,
+    }];
   }, [filtered, active]);
 
   // Ad banners to insert between rows (relative positions)
-  const AD_AFTER = [4, 5]; // after 4th and 5th item in "Tümü" view
+  const AD_AFTER = [5, 10]; // after 5th and 10th item
 
   return (
     <section id="menu" className="relative py-10 md:py-16 lg:py-20 overflow-hidden"
