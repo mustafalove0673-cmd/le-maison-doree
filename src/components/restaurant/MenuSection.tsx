@@ -64,42 +64,86 @@ function waLink(item: typeof ALL_ITEMS[0]) {
   return `https://wa.me/${WA_NUMBER}?text=${msg}`;
 }
 
-/* ═══════════════════════════════════════════════════
-   HELPERS
-   ═══════════════════════════════════════════════════ */
-function Diamond({ size = 8, color = 'rgba(52,211,153,0.4)' }: { size?: number; color?: string }) {
-  return <div style={{ width: size, height: size, transform: 'rotate(45deg)', background: color, borderRadius: 1, flexShrink: 0 }} />;
-}
+const C = {
+  emerald: '#34d399',
+  teal: '#2dd4bf',
+  copper: '#d4956a',
+  rose: '#e8a87c',
+  cream: '#f0ece8',
+  dark: '#060609',
+  dimText: '#8b8b9e',
+};
 
+/* ─── Helpers ─── */
 function useFadeIn(delay = 0) {
   const ref = useRef(null);
   const v = useInView(ref, { once: true, margin: '-40px' });
   return { ref, props: { initial: { opacity: 0, y: 30 } as const, animate: v ? { opacity: 1, y: 0 } : {}, transition: { duration: 0.6, delay, ease: [0.16, 1, 0.3, 1] as const } } };
 }
 
-/* ═══════════════════════════════════════════════════
-   SECTION HEADER
-   ═══════════════════════════════════════════════════ */
+function Diamond({ size = 8, color = 'rgba(52,211,153,0.4)' }: { size?: number; color?: string }) {
+  return <div style={{ width: size, height: size, transform: 'rotate(45deg)', background: color, borderRadius: 1, flexShrink: 0 }} />;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   SECTION HEADER — with background image
+   ═══════════════════════════════════════════════════════════════ */
 function SectionHeader() {
   const { ref, props: p1 } = useFadeIn(0);
   const { props: p2 } = useFadeIn(0.1);
   const { props: p3 } = useFadeIn(0.18);
   const { props: p4 } = useFadeIn(0.26);
+
   return (
-    <div ref={ref} className="text-center mb-10 md:mb-14">
-      <motion.div {...p1} className="flex items-center justify-center gap-3 mb-4">
-        <div className="w-16 md:w-24 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.4))' }} />
-        <Diamond size={7} />
-        <svg width="13" height="13" viewBox="0 0 24 24" style={{ color: 'rgba(52,211,153,0.4)' }}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor" /></svg>
-        <Diamond size={7} />
-        <div className="w-16 md:w-24 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(52,211,153,0.4))' }} />
+    <div ref={ref} className="relative text-center mb-10 md:mb-14 overflow-hidden">
+      {/* Background decorative image */}
+      <div className="absolute inset-0 -top-20 -bottom-20 pointer-events-none">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-[0.04]"
+          style={{ backgroundImage: 'url(/hero-dish.jpg)', filter: 'blur(30px) saturate(1.5)' }}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `radial-gradient(ellipse 60% 50% at 50% 50%, ${C.emerald}06 0%, transparent 70%)`,
+          }}
+        />
+      </div>
+
+      <motion.div {...p1} className="relative z-10 flex items-center justify-center gap-3 mb-4">
+        <div className="w-16 md:w-28 h-px" style={{ background: `linear-gradient(to right, transparent, ${C.emerald}50)` }} />
+        <motion.div
+          animate={{ rotate: [0, 90, 180, 270, 360], scale: [1, 1.3, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <Diamond size={8} color={`${C.emerald}60`} />
+        </motion.div>
+        <svg width="14" height="14" viewBox="0 0 24 24" style={{ color: `${C.emerald}50` }}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor" /></svg>
+        <motion.div
+          animate={{ rotate: [360, 270, 180, 90, 0], scale: [1, 1.3, 1] }}
+          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
+        >
+          <Diamond size={8} color={`${C.copper}50`} />
+        </motion.div>
+        <div className="w-16 md:w-28 h-px" style={{ background: `linear-gradient(to left, transparent, ${C.copper}50)` }} />
       </motion.div>
-      <motion.p {...p2} className="text-[10px] md:text-xs tracking-[0.5em] uppercase font-medium mb-2" style={{ color: 'rgba(52,211,153,0.8)' }}>Lezzetin Ötesinde</motion.p>
-      <motion.h2 {...p3} className="text-4xl sm:text-5xl md:text-6xl font-extralight text-white tracking-tight">
+
+      <motion.p {...p2} className="relative z-10 text-[10px] md:text-xs tracking-[0.5em] uppercase font-medium mb-2"
+        style={{ color: C.emerald }}>
+        Lezzetin Ötesinde
+      </motion.p>
+
+      <motion.h2 {...p3} className="relative z-10 text-4xl sm:text-5xl md:text-6xl font-extralight text-white tracking-tight">
         <span className="block">Özel</span>
-        <span className="block mt-1 italic" style={{ color: 'rgba(153,246,228,0.9)', fontFamily: 'Georgia, serif' }}>Menümüz</span>
+        <span className="block mt-1 italic glow-text-emerald"
+          style={{ color: C.teal, fontFamily: 'Georgia, serif' }}>
+          Menümüz
+        </span>
       </motion.h2>
-      <motion.p {...p4} className="mt-4 text-white/50 text-sm font-light tracking-wider max-w-lg mx-auto">Her tabak, şefimizin tutkuyla hazırladığı bir sanat eseri</motion.p>
+
+      <motion.p {...p4} className="relative z-10 mt-4 text-white/50 text-sm font-light tracking-wider max-w-lg mx-auto">
+        Her tabak, şefimizin tutkuyla hazırladığı bir sanat eseri
+      </motion.p>
     </div>
   );
 }
@@ -111,9 +155,13 @@ function SearchBar({ query, onChange }: { query: string; onChange: (q: string) =
   const { ref, props } = useFadeIn(0);
   return (
     <motion.div ref={ref} {...props} className="max-w-lg mx-auto mb-8 md:mb-10">
-      <div className="relative">
-        <div className="flex items-center gap-3 px-5 py-3 rounded-xl"
-          style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div className="relative group">
+        <div className="flex items-center gap-3 px-5 py-3.5 rounded-xl transition-all duration-500"
+          style={{
+            background: 'rgba(255,255,255,0.03)',
+            border: '1px solid rgba(255,255,255,0.06)',
+            backdropFilter: 'blur(10px)',
+          }}>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" strokeWidth="1.5">
             <circle cx="11" cy="11" r="8" /><path d="M21 21l-4.35-4.35" />
           </svg>
@@ -125,6 +173,13 @@ function SearchBar({ query, onChange }: { query: string; onChange: (q: string) =
             </button>
           )}
         </div>
+        {/* Animated bottom glow */}
+        <motion.div
+          className="absolute -bottom-px left-1/2 -translate-x-1/2 h-px"
+          style={{ background: `linear-gradient(90deg, transparent, ${C.emerald}30, transparent)` }}
+          animate={{ scaleX: [0.3, 0.8, 0.3] }}
+          transition={{ duration: 4, repeat: Infinity }}
+        />
       </div>
     </motion.div>
   );
@@ -135,27 +190,50 @@ function SearchBar({ query, onChange }: { query: string; onChange: (q: string) =
    ═══════════════════════════════════════════════════ */
 function CategoryFilter({ active, onChange }: { active: string; onChange: (c: string) => void }) {
   const { ref, props } = useFadeIn(0.06);
+
+  const catIcons: Record<string, string> = {
+    'Başlangıçlar': '🥗',
+    'Ara Sıcaklar': '🔥',
+    'Ana Yemekler': '🥩',
+    'Tatlılar': '🍰',
+    'İçecekler': '🍷',
+  };
+
   return (
     <motion.div ref={ref} {...props} className="flex flex-wrap items-center justify-center gap-2 mb-8 md:mb-10">
       {CATEGORIES.map((cat) => (
-        <button key={cat} onClick={() => onChange(cat)}
-          className={`relative px-5 py-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-500 rounded-lg
-            ${active === cat ? 'text-black' : 'text-white/35 hover:text-white/60 border border-white/[0.06] hover:border-white/15'}`}>
-          {active === cat && (
-            <motion.div className="absolute inset-0 rounded-lg"
-              style={{ background: 'linear-gradient(135deg, #34d399, #2dd4bf)' }}
-              layoutId="catTab" transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} />
+        <motion.button
+          key={cat}
+          onClick={() => onChange(cat)}
+          className={`relative px-5 py-2.5 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-500 rounded-xl
+            ${active === cat ? 'text-black' : 'text-white/35 hover:text-white/60'}`}
+          whileHover={{ scale: 1.05, y: -2 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {active === cat ? (
+            <motion.div
+              className="absolute inset-0 rounded-xl"
+              style={{ background: `linear-gradient(135deg, ${C.emerald}, ${C.teal})` }}
+              layoutId="catTab"
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            />
+          ) : (
+            <div className="absolute inset-0 rounded-xl"
+              style={{ border: '1px solid rgba(255,255,255,0.06)' }} />
           )}
-          <span className="relative z-10">{cat}</span>
-        </button>
+          <span className="relative z-10 flex items-center gap-1.5">
+            <span className="hidden sm:inline text-xs">{catIcons[cat]}</span>
+            {cat}
+          </span>
+        </motion.button>
       ))}
     </motion.div>
   );
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   MENU ITEM — Luxury list style, compact horizontal
-   ═══════════════════════════════════════════════════ */
+   MENU ITEM — Rich card with image, 3D hover, animations
+   ═══════════════════════════════════════════════════════════════ */
 function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number }) {
   const ref = useRef(null);
   const v = useInView(ref, { once: true, margin: '-20px' });
@@ -164,68 +242,110 @@ function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number })
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 15 }}
-      animate={v ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.4, delay: (index % 2) * 0.05, ease: [0.16, 1, 0.3, 1] }}
+      initial={{ opacity: 0, y: 20, rotateY: hover ? 5 : 0 }}
+      animate={v ? { opacity: 1, y: 0, rotateY: hover ? 3 : 0 } : {}}
+      transition={{ duration: 0.5, delay: (index % 2) * 0.06, ease: [0.16, 1, 0.3, 1] }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
       className="group cursor-pointer"
+      style={{ perspective: '800px' }}
     >
-      <div className="relative flex items-stretch gap-3 md:gap-4 py-3 px-3 md:px-4 rounded-xl transition-all duration-400"
+      <motion.div
+        className="relative flex items-stretch gap-3 md:gap-4 py-3 px-3 md:px-4 rounded-xl overflow-hidden transition-all duration-500"
         style={{
-          background: hover ? 'rgba(52,211,153,0.04)' : 'transparent',
-          border: `1px solid ${hover ? 'rgba(52,211,153,0.1)' : 'rgba(255,255,255,0.03)'}`,
-        }}>
+          background: hover
+            ? 'linear-gradient(135deg, rgba(52,211,153,0.06), rgba(45,212,191,0.03))'
+            : 'rgba(255,255,255,0.01)',
+          border: `1px solid ${hover ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.03)'}`,
+          transform: hover ? 'perspective(800px) rotateY(2deg) translateX(4px)' : 'none',
+          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
+        }}
+      >
+        {/* Shimmer sweep on hover */}
+        {hover && (
+          <motion.div
+            className="absolute inset-0 pointer-events-none z-[1]"
+            style={{
+              background: 'linear-gradient(110deg, transparent 30%, rgba(52,211,153,0.04) 50%, transparent 70%)',
+              backgroundSize: '200% 100%',
+            }}
+            animate={{ backgroundPosition: ['200% center', '-200% center'] }}
+            transition={{ duration: 1.5, ease: 'linear' }}
+          />
+        )}
 
-        {/* Tiny image thumbnail */}
+        {/* Image thumbnail */}
         <div className="relative w-[70px] h-[70px] md:w-[80px] md:h-[80px] rounded-lg overflow-hidden flex-shrink-0"
-          style={{ border: `1px solid ${hover ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.06)'}` }}>
+          style={{
+            border: `1px solid ${hover ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.06)'}`,
+            boxShadow: hover ? '0 4px 16px rgba(52,211,153,0.1)' : 'none',
+            transition: 'all 0.5s',
+          }}>
           <motion.div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${item.img})` }}
-            animate={{ scale: hover ? 1.15 : 1 }}
-            transition={{ duration: 0.5 }}
+            animate={{ scale: hover ? 1.2 : 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
 
-          {/* Order number badge */}
+          {/* Number badge */}
           <div className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full flex items-center justify-center z-10"
-            style={{ background: hover ? 'rgba(52,211,153,0.8)' : 'rgba(255,255,255,0.08)', border: '1px solid rgba(0,0,0,0.5)', transition: 'all 0.3s' }}>
-            <span className="text-[8px] font-bold" style={{ color: hover ? '#000' : 'rgba(255,255,255,0.5)' }}>
+            style={{
+              background: hover ? 'rgba(52,211,153,0.9)' : 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(0,0,0,0.5)',
+              transition: 'all 0.3s',
+              boxShadow: hover ? '0 0 10px rgba(52,211,153,0.3)' : 'none',
+            }}>
+            <span className="text-[8px] font-bold"
+              style={{ color: hover ? '#000' : 'rgba(255,255,255,0.5)' }}>
               {((index % 10) + 1)}
             </span>
           </div>
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 flex flex-col justify-center py-0.5">
-          {/* Name row */}
+        <div className="relative z-[2] flex-1 min-w-0 flex flex-col justify-center py-0.5">
+          {/* Name + price */}
           <div className="flex items-start justify-between gap-3 mb-1">
             <h3
-              className="text-white text-sm md:text-[15px] font-medium tracking-wide leading-tight truncate transition-colors duration-300"
-              style={{ color: hover ? 'rgba(167,243,208,1)' : 'rgba(255,255,255,0.85)', fontFamily: 'Georgia, serif' }}
+              className="text-sm md:text-[15px] font-medium tracking-wide leading-tight truncate transition-all duration-300"
+              style={{
+                color: hover ? C.emerald : 'rgba(255,255,255,0.85)',
+                fontFamily: 'Georgia, serif',
+                textShadow: hover ? `0 0 20px ${C.emerald}20` : 'none',
+              }}
             >
               {item.name}
             </h3>
-            <span className="text-sm md:text-[15px] font-light whitespace-nowrap flex-shrink-0 transition-colors duration-300"
-              style={{ color: hover ? 'rgba(52,211,153,1)' : 'rgba(52,211,153,0.7)' }}>
+            <span className="text-sm md:text-[15px] font-light whitespace-nowrap flex-shrink-0 transition-all duration-300"
+              style={{
+                color: hover ? C.emerald : `${C.emerald}80`,
+                textShadow: hover ? `0 0 15px ${C.emerald}30` : 'none',
+              }}>
               {item.price}
             </span>
           </div>
 
-          {/* Dot leader line */}
+          {/* Animated dot line */}
           <div className="flex items-center gap-1 mb-1.5">
-            <div className="w-1 h-1 rounded-full" style={{ background: hover ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.08)', transition: 'all 0.3s' }} />
-            <div className="flex-1 border-b border-dotted" style={{ borderColor: hover ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)', transition: 'all 0.3s' }} />
+            <motion.div
+              className="w-1.5 h-1.5 rounded-full"
+              style={{ background: hover ? C.emerald : 'rgba(255,255,255,0.06)', transition: 'all 0.3s' }}
+              animate={hover ? { scale: [1, 1.5, 1] } : {}}
+              transition={{ duration: 1, repeat: Infinity }}
+            />
+            <div className="flex-1 border-b border-dotted"
+              style={{ borderColor: hover ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.04)', transition: 'all 0.3s' }} />
           </div>
 
           {/* Description */}
-          <p className="text-white/30 text-[11px] md:text-xs font-light leading-snug transition-opacity duration-300"
-            style={{ opacity: hover ? 0.6 : 0.35 }}>
+          <p className="text-white/25 text-[11px] md:text-xs font-light leading-snug transition-all duration-300"
+            style={{ opacity: hover ? 0.7 : 0.35 }}>
             {item.desc}
           </p>
 
-          {/* WhatsApp button — appears on hover */}
+          {/* WhatsApp button */}
           <motion.a
             href={waLink(item)}
             target="_blank"
@@ -241,49 +361,13 @@ function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number })
             <span className="text-[#4ADE80] text-[9px] tracking-[0.1em] uppercase font-semibold whitespace-nowrap">Sipariş Ver</span>
           </motion.a>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CATEGORY TITLE — shown when a specific category is active
-   ═══════════════════════════════════════════════════════════════ */
-function CategoryTitle({ name, count }: { name: string; count: number }) {
-  const ref = useRef(null);
-  const v = useInView(ref, { once: true, margin: '-20px' });
-
-  const icons: Record<string, string> = {
-    'Başlangıçlar': 'M12 3c.132 0 .263 0 .393.007a2 2 0 0 1 .674 1.286c.173.264.34.532.502.803.16.276.315.556.467.838.15.273.295.549.433.828.136.278.267.558.392.84.122.278.239.559.349.842.107.279.208.562.302.847.091.281.175.565.254.852.074.282.142.567.203.855.057.283.107.569.15.857.04.282.076.566.107.851.029.281.054.563.075.846.02.28.038.562.051.844.014.276.025.553.033.832.006.274.01.549.01.825 0 3.75-3.545 6.464-7.797 7.776M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18',
-    'Ara Sıcaklar': 'M15.362 5.214A8.252 8.252 0 0 1 12 21 8.25 8.25 0 0 1 6.038 7.048 8.287 8.287 0 0 0 9 9.6M8.638 5.214A8.252 8.252 0 0 0 12 3a8.25 8.25 0 0 0 6.962 2.214',
-    'Ana Yemekler': 'M12 8.25v-1.5m0 1.5c-1.355 0-2.697.056-4.024.166C6.845 8.51 6 9.473 6 10.608v2.513m6-4.871c1.355 0 2.697.056 4.024.166C17.155 8.51 18 9.473 18 10.608v2.513M15 8.25v-1.5m-6 1.5v-1.5m12 9.75-1.5.75a3.354 3.354 0 0 1-3 0 3.354 3.354 0 0 1-3-3 3.354 3.354 0 0 1 3-3 3.354 3.354 0 0 1-3 3 .166.663.357 1.287.577 1.9',
-    'Tatlılar': 'M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12',
-    'İçecekler': 'M9.75 3.104v5.714a2.25 2.25 0 0 1-.659 1.591L5 14.5M9.75 3.104c-.251.023-.501.05-.75.082m.75-.082a24.301 24.301 0 0 1 4.5 0m0 0v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M14.25 3.104c.251.023.501.05.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0 1 12 15a9.065 9.065 0 0 1-6.23-.693L5 14.5m14.8.8 1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0 1 12 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.25',
-  };
-
-  return (
-    <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={v ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="flex items-center gap-4 py-5 md:py-6 mb-2">
-      <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-        style={{ background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.15)' }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(52,211,153,0.6)" strokeWidth="1.5">
-          <path d={icons[name] || icons['Başlangıçlar']} />
-        </svg>
-      </div>
-      <div className="flex-1">
-        <h3 className="text-white text-lg md:text-xl font-light tracking-wide" style={{ fontFamily: 'Georgia, serif' }}>{name}</h3>
-      </div>
-      <div className="flex items-center gap-3">
-        <span className="text-white/20 text-[10px] tracking-[0.2em] uppercase">{count} ürün</span>
-        <div className="w-8 h-px" style={{ background: 'rgba(52,211,153,0.2)' }} />
-        <Diamond size={5} color="rgba(52,211,153,0.3)" />
-      </div>
-    </motion.div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   AD BANNER 1 — Happy Hour
+/* ═══════════════════════════════════════════════════
+   AD BANNERS — Visually rich
    ═══════════════════════════════════════════════════ */
 function AdBanner1() {
   const ref = useRef(null);
@@ -293,20 +377,28 @@ function AdBanner1() {
     <motion.div ref={ref} initial={{ opacity: 0, y: 20 }} animate={v ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }} className="my-5 md:my-6">
       <div className="relative overflow-hidden rounded-xl py-4 md:py-5 px-4"
-        style={{ background: 'linear-gradient(135deg, #0a100e, #060d0b, #0a100e)', border: '1px solid rgba(52,211,153,0.1)' }}>
+        style={{
+          background: 'linear-gradient(135deg, #0a100e, #060d0b, #0a100e)',
+          border: '1px solid rgba(52,211,153,0.1)',
+          backdropFilter: 'blur(10px)',
+        }}>
+        {/* Background image */}
+        <div className="absolute inset-0 opacity-[0.03] bg-cover bg-center"
+          style={{ backgroundImage: 'url(/menu-mocktail.jpg)', filter: 'blur(10px)' }} />
         <motion.div className="absolute -top-6 -left-6 w-24 h-24 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%)' }}
-          animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity }} />
+          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.08) 0%, transparent 70%)' }}
+          animate={{ scale: [1, 1.3, 1] }} transition={{ duration: 4, repeat: Infinity }} />
         <div className="absolute top-2 left-2"><Diamond size={5} color="rgba(52,211,153,0.2)" /></div>
         <div className="absolute top-2 right-2"><Diamond size={5} color="rgba(52,211,153,0.2)" /></div>
         <div className="absolute bottom-2 left-2"><Diamond size={5} color="rgba(52,211,153,0.1)" /></div>
         <div className="absolute bottom-2 right-2"><Diamond size={5} color="rgba(52,211,153,0.1)" /></div>
         <div className="relative z-10 text-center">
-          <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: 'rgba(52,211,153,0.5)' }}
+          <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: `${C.emerald}60` }}
             animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>✦ Her Akşam 18:00 - 20:00 ✦</motion.div>
-          <motion.h3 className="text-2xl md:text-4xl font-extralight text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}
+          <motion.h3 className="text-2xl md:text-4xl font-extralight text-white tracking-tight glow-text-emerald"
+            style={{ fontFamily: 'Georgia, serif' }}
             animate={{ letterSpacing: ['0em', '0.04em', '0em'] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
-            Happy <span className="italic" style={{ color: 'rgba(94,234,212,1)' }}>Hour</span>
+            Happy <span className="italic" style={{ color: C.teal }}>Hour</span>
           </motion.h3>
           <p className="mt-1 text-white/35 text-[11px] font-light">Kokteyller ve içeceklerde %20 indirim</p>
         </div>
@@ -321,9 +413,6 @@ function AdBanner1() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   AD BANNER 2 — Live Music (PURPLE — keep as-is)
-   ═══════════════════════════════════════════════════ */
 function AdBanner2() {
   const ref = useRef(null);
   const v = useInView(ref, { once: true, margin: '-30px' });
@@ -331,13 +420,20 @@ function AdBanner2() {
     <motion.div ref={ref} initial={{ opacity: 0, scale: 0.97 }} animate={v ? { opacity: 1, scale: 1 } : {}}
       transition={{ duration: 0.6 }} className="my-5 md:my-6">
       <div className="relative overflow-hidden rounded-xl"
-        style={{ background: 'linear-gradient(135deg, #050a15, #0a0515, #050a15)', border: '1px solid rgba(168,85,247,0.1)' }}>
+        style={{
+          background: 'linear-gradient(135deg, #050a15, #0a0515, #050a15)',
+          border: '1px solid rgba(168,85,247,0.1)',
+          backdropFilter: 'blur(10px)',
+        }}>
+        {/* BG image */}
+        <div className="absolute inset-0 opacity-[0.03] bg-cover bg-center"
+          style={{ backgroundImage: 'url(/hero-bar.jpg)', filter: 'blur(10px)' }} />
         <motion.div className="absolute top-3 left-[20%] w-16 h-16 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.08) 0%, transparent 70%)' }}
-          animate={{ y: [0, -10, 0] }} transition={{ duration: 5, repeat: Infinity }} />
+          style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)' }}
+          animate={{ y: [0, -12, 0] }} transition={{ duration: 5, repeat: Infinity }} />
         <motion.div className="absolute bottom-3 right-[15%] w-20 h-20 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 70%)' }}
-          animate={{ y: [0, 8, 0] }} transition={{ duration: 6, repeat: Infinity, delay: 2 }} />
+          style={{ background: 'radial-gradient(circle, rgba(59,130,246,0.08) 0%, transparent 70%)' }}
+          animate={{ y: [0, 10, 0] }} transition={{ duration: 6, repeat: Infinity, delay: 2 }} />
         <motion.div className="absolute top-4 right-[25%]" animate={{ rotate: [0, 90, 0] }} transition={{ duration: 8, repeat: Infinity }}>
           <div className="w-4 h-4 relative"><div className="absolute top-1/2 left-0 w-full h-px -translate-y-1/2 bg-purple-400/20" /><div className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-purple-400/20" /></div>
         </motion.div>
@@ -355,7 +451,7 @@ function AdBanner2() {
           </div>
           <motion.div className="w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0" animate={{ scale: [1, 1.08, 1] }}
             transition={{ duration: 2.5, repeat: Infinity }}
-            style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.1) 0%, transparent 70%)', border: '1px solid rgba(168,85,247,0.15)' }}>
+            style={{ background: 'radial-gradient(circle, rgba(168,85,247,0.12) 0%, transparent 70%)', border: '1px solid rgba(168,85,247,0.15)' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(168,85,247,0.5)" strokeWidth="1.5">
               <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" />
             </svg>
@@ -370,9 +466,6 @@ function AdBanner2() {
   );
 }
 
-/* ═══════════════════════════════════════════════════
-   AD BANNER 3 — Wine Tasting (copper/rose-gold tones)
-   ═══════════════════════════════════════════════════ */
 function AdBanner3() {
   const ref = useRef(null);
   const v = useInView(ref, { once: true, margin: '-30px' });
@@ -380,12 +473,19 @@ function AdBanner3() {
     <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={v ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6 }} className="my-5 md:my-6">
       <div className="relative overflow-hidden rounded-xl"
-        style={{ background: 'linear-gradient(135deg, #0a0a10, #101218, #0a0a10)', border: '1px solid rgba(212,149,106,0.12)' }}>
+        style={{
+          background: 'linear-gradient(135deg, #0a0a10, #101218, #0a0a10)',
+          border: '1px solid rgba(212,149,106,0.12)',
+          backdropFilter: 'blur(10px)',
+        }}>
+        {/* BG image */}
+        <div className="absolute inset-0 opacity-[0.03] bg-cover bg-center"
+          style={{ backgroundImage: 'url(/menu-wine.jpg)', filter: 'blur(10px)' }} />
         <motion.div className="absolute -top-3 -right-3 w-16 h-16 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(212,149,106,0.08) 0%, transparent 70%)' }}
-          animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 5, repeat: Infinity }} />
+          style={{ background: 'radial-gradient(circle, rgba(212,149,106,0.1) 0%, transparent 70%)' }}
+          animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 5, repeat: Infinity }} />
         <motion.div className="absolute top-3 right-3 grid grid-cols-3 gap-1.5"
-          animate={{ opacity: [0.1, 0.2, 0.1] }} transition={{ duration: 4, repeat: Infinity }}>
+          animate={{ opacity: [0.1, 0.25, 0.1] }} transition={{ duration: 4, repeat: Infinity }}>
           {[...Array(9)].map((_, i) => <div key={i} className="w-1 h-1 rounded-full" style={{ background: 'rgba(184,115,69,0.4)' }} />)}
         </motion.div>
         <div className="absolute top-1/2 -translate-y-1/2 left-3 md:left-5">
@@ -401,15 +501,15 @@ function AdBanner3() {
         </div>
         <div className="relative z-10 px-6 md:px-10 py-4 md:py-5 md:pl-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
-            <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: 'rgba(184,115,69,0.4)' }}
-              animate={{ opacity: [0.5, 0.8, 0.5] }} transition={{ duration: 2.5, repeat: Infinity }}>✦ Her Ayın İlk Cumartesi ✦</motion.div>
-            <h3 className="text-xl md:text-2xl font-extralight text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
-              Şarap <span className="italic" style={{ color: '#d4956a' }}>Degüstasyonu</span>
+            <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: 'rgba(184,115,69,0.5)' }}
+              animate={{ opacity: [0.5, 0.9, 0.5] }} transition={{ duration: 2.5, repeat: Infinity }}>✦ Her Ayın İlk Cumartesi ✦</motion.div>
+            <h3 className="text-xl md:text-2xl font-extralight text-white tracking-tight glow-text-copper" style={{ fontFamily: 'Georgia, serif' }}>
+              Şarap <span className="italic" style={{ color: C.copper }}>Degüstasyonu</span>
             </h3>
             <p className="mt-0.5 text-white/30 text-[11px] font-light">Sommelier eşliğinde ödüllü şaraplar</p>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-xl font-extralight" style={{ color: '#d4956a', fontFamily: 'Georgia, serif' }}>₺450</span>
+            <span className="text-xl font-extralight" style={{ color: C.copper, fontFamily: 'Georgia, serif' }}>₺450</span>
             <p className="text-white/15 text-[8px] tracking-[0.2em] uppercase">Kişi Başı</p>
           </div>
         </div>
@@ -428,19 +528,26 @@ function TastingBanner() {
   return (
     <motion.div ref={ref} {...props} className="mt-10 md:mt-14">
       <div className="relative overflow-hidden rounded-2xl py-7 md:py-9 px-6 md:px-10"
-        style={{ background: 'linear-gradient(135deg, #0c1018, #080c14, #0c1018)', border: '1px solid rgba(52,211,153,0.08)' }}>
-        <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.04) 0%, transparent 70%)' }} />
-        <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.03) 0%, transparent 70%)' }} />
+        style={{
+          background: 'linear-gradient(135deg, #0c1018, #080c14, #0c1018)',
+          border: '1px solid rgba(52,211,153,0.08)',
+          backdropFilter: 'blur(10px)',
+        }}>
+        {/* BG image */}
+        <div className="absolute inset-0 opacity-[0.03] bg-cover bg-center rounded-2xl"
+          style={{ backgroundImage: 'url(/menu-steak.jpg)', filter: 'blur(20px)' }} />
+        <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.05) 0%, transparent 70%)' }} />
+        <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.04) 0%, transparent 70%)' }} />
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
           <div className="text-center md:text-left">
-            <div className="text-[9px] tracking-[0.4em] uppercase mb-2" style={{ color: 'rgba(52,211,153,0.4)' }}>✦ Özel Deneyim ✦</div>
+            <div className="text-[9px] tracking-[0.4em] uppercase mb-2" style={{ color: `${C.emerald}50` }}>✦ Özel Deneyim ✦</div>
             <h3 className="text-xl md:text-2xl font-extralight text-white mb-1">
-              Şefin <span className="italic" style={{ color: 'rgba(153,246,228,1)', fontFamily: 'Georgia, serif' }}>Tasting</span> Menüsü
+              Şefin <span className="italic glow-text-emerald" style={{ color: C.teal, fontFamily: 'Georgia, serif' }}>Tasting</span> Menüsü
             </h3>
             <p className="text-white/30 text-xs md:text-sm font-light">7 aşamalı menü, özel şarap eşleştirmesi dahil</p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="text-2xl md:text-3xl font-light" style={{ color: 'rgba(94,234,212,1)' }}>₺1.200</div>
+            <div className="text-2xl md:text-3xl font-light glow-text-emerald" style={{ color: C.teal }}>₺1.200</div>
             <div className="text-white/20 text-[8px] tracking-[0.3em] uppercase">Kişi Başı</div>
             <div className="flex gap-2 mt-1">
               <a href={link} target="_blank" rel="noopener noreferrer"
@@ -448,7 +555,13 @@ function TastingBanner() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 WhatsApp
               </a>
-              <button className="px-4 py-2 text-black text-[9px] tracking-[0.15em] uppercase font-semibold transition-all duration-500" style={{ background: 'linear-gradient(135deg, #34d399, #2dd4bf)' }}>Rezervasyon</button>
+              <motion.button
+                className="px-4 py-2 text-black text-[9px] tracking-[0.15em] uppercase font-semibold transition-all duration-500 rounded-lg"
+                style={{ background: `linear-gradient(135deg, ${C.emerald}, ${C.teal})` }}
+                whileHover={{ scale: 1.05, boxShadow: `0 0 20px ${C.emerald}20` }}
+                whileTap={{ scale: 0.95 }}>
+                Rezervasyon
+              </motion.button>
             </div>
           </div>
         </div>
@@ -475,28 +588,79 @@ export default function MenuSection() {
     return items;
   }, [active, search]);
 
-  // Group items by category for display with ad banners
   const sections = useMemo(() => {
-    return [{
-      cat: active,
-      items: filtered,
-      showTitle: false,
-    }];
+    return [{ cat: active, items: filtered, showTitle: false }];
   }, [filtered, active]);
 
-  // Ad banners to insert between rows (relative positions)
-  const AD_AFTER = [5, 10]; // after 5th and 10th item
+  const AD_AFTER = [5, 10];
 
   return (
-    <section id="menu" className="relative py-10 md:py-16 lg:py-20 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #080a10, #0a0d14, #080a10)' }}>
-      <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
-        style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', mixBlendMode: 'overlay' }} />
-      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.1), transparent)' }} />
-      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.1), transparent)' }} />
-      <motion.div className="absolute top-20 left-[4%] pointer-events-none" animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }} transition={{ duration: 12, repeat: Infinity }}><Diamond size={8} color="rgba(52,211,153,0.12)" /></motion.div>
-      <motion.div className="absolute bottom-32 right-[5%] pointer-events-none" animate={{ y: [0, 10, 0] }} transition={{ duration: 10, repeat: Infinity }}><Diamond size={6} color="rgba(52,211,153,0.08)" /></motion.div>
+    <section id="menu" className="relative py-10 md:py-16 lg:py-20 overflow-hidden noise-overlay"
+      style={{ background: 'linear-gradient(180deg, #060609, #080a12, #060609)' }}>
 
+      {/* ── Background visuals ── */}
+      {/* Large decorative background image */}
+      <div className="absolute inset-0 pointer-events-none z-0">
+        <div className="absolute inset-0 opacity-[0.015] bg-cover bg-center"
+          style={{ backgroundImage: 'url(/hero-hall.jpg)', filter: 'blur(40px) saturate(1.3)' }} />
+      </div>
+
+      {/* Gradient overlays */}
+      <div className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          background: `radial-gradient(ellipse 50% 40% at 20% 30%, ${C.emerald}04 0%, transparent 70%)`,
+        }} />
+      <div className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          background: `radial-gradient(ellipse 40% 35% at 80% 70%, ${C.copper}03 0%, transparent 60%)`,
+        }} />
+
+      {/* Edge lines */}
+      <div className="absolute top-0 left-0 right-0 h-px z-20"
+        style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.12), transparent)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-px z-20"
+        style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.12), transparent)' }} />
+
+      {/* Floating diamonds */}
+      <motion.div className="absolute top-20 left-[4%] pointer-events-none z-[2]"
+        animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }}
+        transition={{ duration: 12, repeat: Infinity }}>
+        <Diamond size={8} color="rgba(52,211,153,0.12)" />
+      </motion.div>
+      <motion.div className="absolute bottom-32 right-[5%] pointer-events-none z-[2]"
+        animate={{ y: [0, 10, 0], rotate: [0, -30, 0] }}
+        transition={{ duration: 10, repeat: Infinity }}>
+        <Diamond size={6} color="rgba(52,211,153,0.08)" />
+      </motion.div>
+      <motion.div className="absolute top-[40%] right-[3%] pointer-events-none z-[2]"
+        animate={{ y: [0, -8, 0], scale: [1, 1.3, 1] }}
+        transition={{ duration: 14, repeat: Infinity, delay: 2 }}>
+        <Diamond size={5} color="rgba(212,149,106,0.1)" />
+      </motion.div>
+
+      {/* Light rays */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
+        <motion.div
+          className="absolute top-0 left-[40%] w-[1px] h-[60%]"
+          style={{
+            background: `linear-gradient(180deg, ${C.emerald}08, transparent)`,
+            transform: 'skewX(-12deg)',
+          }}
+          animate={{ x: [-10, 10, -10], opacity: [0.3, 0.7, 0.3] }}
+          transition={{ duration: 8, repeat: Infinity }}
+        />
+        <motion.div
+          className="absolute bottom-0 right-[35%] w-[1px] h-[40%]"
+          style={{
+            background: `linear-gradient(0deg, ${C.copper}06, transparent)`,
+            transform: 'skewX(15deg)',
+          }}
+          animate={{ x: [8, -8, 8], opacity: [0.2, 0.5, 0.2] }}
+          transition={{ duration: 10, repeat: Infinity, delay: 3 }}
+        />
+      </div>
+
+      {/* ── Content ── */}
       <div className="relative z-10 max-w-[900px] mx-auto px-4 md:px-8">
         <SectionHeader />
         <SearchBar query={search} onChange={setSearch} />
@@ -507,7 +671,7 @@ export default function MenuSection() {
           <motion.div key={`${active}-${search}`} className="text-center mb-6"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <span className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-light">
-              <span style={{ color: 'rgba(52,211,153,0.4)' }}>{filtered.length}</span> ürün
+              <span style={{ color: `${C.emerald}50` }}>{filtered.length}</span> ürün
             </span>
           </motion.div>
         </AnimatePresence>
@@ -519,63 +683,30 @@ export default function MenuSection() {
 
             {sections.map((section, sIdx) => (
               <div key={section.cat}>
-                {/* Category title */}
-                {section.showTitle && (
-                  <CategoryTitle name={section.cat} count={section.items.length} />
-                )}
-
-                {/* Items in 2-col grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 md:gap-1.5">
                   {section.items.map((item, i) => {
-                    const globalIdx = filtered.indexOf(item);
                     const adAfterItem = AD_AFTER.indexOf(i + 1);
-                    const adBanner = adAfterItem === 0 ? <AdBanner1 key={`ad-${sIdx}-${adAfterItem}`} /> : adAfterItem === 1 ? <AdBanner2 key={`ad-${sIdx}-${adAfterItem}`} /> : null;
-
+                    const adBanner = adAfterItem === 0 ? <AdBanner1 key={`ad-${sIdx}-${adAfterItem}`} />
+                      : adAfterItem === 1 ? <AdBanner2 key={`ad-${sIdx}-${adAfterItem}`} />
+                      : null;
                     return (
                       <div key={item.id}>
-                        <MenuItem item={item} index={globalIdx} />
-                        {adBanner}
+                        <MenuItem item={item} index={i} />
+                        {adBanner && (
+                          <div className="col-span-1 sm:col-span-2">{adBanner}</div>
+                        )}
+                        {/* Insert wine tasting ad after 15th item */}
+                        {i === 15 && <div className="col-span-1 sm:col-span-2"><AdBanner3 /></div>}
                       </div>
                     );
                   })}
                 </div>
-
-                {/* Separator between categories */}
-                {sIdx < sections.length - 1 && (
-                  <div className="my-6 md:my-8">
-                    <div className="flex items-center justify-center gap-3">
-                      <div className="w-6 h-px" style={{ background: 'rgba(52,211,153,0.12)' }} />
-                      <Diamond size={4} color="rgba(52,211,153,0.3)" />
-                      <div className="w-1 h-1 rounded-full" style={{ border: '1px solid rgba(52,211,153,0.1)' }} />
-                      <Diamond size={4} color="rgba(52,211,153,0.3)" />
-                      <div className="w-6 h-px" style={{ background: 'rgba(52,211,153,0.12)' }} />
-                    </div>
-                  </div>
-                )}
               </div>
             ))}
 
-            <AdBanner3 />
             <TastingBanner />
-
           </motion.div>
         </AnimatePresence>
-
-        {/* Footer note */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="mt-10 md:mt-14 text-center"
-        >
-          <div className="flex items-center justify-center gap-3 mb-3">
-            <div className="w-10 h-px" style={{ background: 'rgba(52,211,153,0.15)' }} />
-            <Diamond size={5} color="rgba(52,211,153,0.25)" />
-            <div className="w-10 h-px" style={{ background: 'rgba(52,211,153,0.15)' }} />
-          </div>
-          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-light">Tüm fiyatlar KDV dahildir</p>
-          <p className="text-white/15 text-[9px] tracking-[0.2em] uppercase font-light mt-1">Menü değişiklikleri saklıdır</p>
-        </motion.div>
       </div>
     </section>
   );
