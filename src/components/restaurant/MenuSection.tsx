@@ -498,7 +498,7 @@ export default function MenuSection() {
   const AD_AFTER = [4, 5]; // after 4th and 5th item in "Tümü" view
 
   return (
-    <section id="menu" className="relative py-20 md:py-28 lg:py-36 overflow-hidden"
+    <section id="menu" className="relative py-10 md:py-16 lg:py-20 overflow-hidden"
       style={{ background: 'linear-gradient(180deg, #050505, #0a0806, #050505)' }}>
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', mixBlendMode: 'overlay' }} />
