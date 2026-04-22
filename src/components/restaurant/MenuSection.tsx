@@ -47,7 +47,7 @@ const ALL_ITEMS = [
   { id: 29, name: 'Künefe',             desc: 'Geleneksel künefe, kaymak, antep fıstığı',           price: '₺165',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
   { id: 30, name: 'Cheesecake',          desc: 'New York cheesecake, yaban mersini kompotu',        price: '₺150',  cat: 'Tatlılar', img: '/menu-dessert.jpg' },
   { id: 31, name: 'Smoky Old Fashioned', desc: 'Bourbon, şeker, bitter, duman efektli',             price: '₺180',  cat: 'İçecekler', img: '/menu-cocktail1.jpg' },
-  { id: 32, name: 'Château Margaux',     desc: '2015 Bordeaux, kırmızı meyve, vanilya notları',     price: '₺950',  cat: 'İçecekler', img: '/menu-wine.jpg' },
+  { id: 32, name: 'Château Margaux',     desc: '2015 Bordeaux, kırmızı meyve, vanilya notaları',     price: '₺950',  cat: 'İçecekler', img: '/menu-wine.jpg' },
   { id: 33, name: 'Tropical Sunset',     desc: 'Mango, ananas, hindistan cevizi, lime',              price: '₺120',  cat: 'İçecekler', img: '/menu-mocktail.jpg' },
   { id: 34, name: 'Negroni',             desc: 'Gin, bitter campari, tatlı vermut, portakal',       price: '₺160',  cat: 'İçecekler', img: '/menu-cocktail1.jpg' },
   { id: 35, name: 'Barolo Riserva',      desc: '2016 Piemonte, kuru meyve, tarçın, çikolata',       price: '₺850',  cat: 'İçecekler', img: '/menu-wine.jpg' },
@@ -67,7 +67,7 @@ function waLink(item: typeof ALL_ITEMS[0]) {
 /* ═══════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════ */
-function Diamond({ size = 8, color = 'rgba(245,158,11,0.4)' }: { size?: number; color?: string }) {
+function Diamond({ size = 8, color = 'rgba(52,211,153,0.4)' }: { size?: number; color?: string }) {
   return <div style={{ width: size, height: size, transform: 'rotate(45deg)', background: color, borderRadius: 1, flexShrink: 0 }} />;
 }
 
@@ -88,16 +88,16 @@ function SectionHeader() {
   return (
     <div ref={ref} className="text-center mb-10 md:mb-14">
       <motion.div {...p1} className="flex items-center justify-center gap-3 mb-4">
-        <div className="w-16 md:w-24 h-px bg-gradient-to-r from-transparent to-amber-400/40" />
+        <div className="w-16 md:w-24 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.4))' }} />
         <Diamond size={7} />
-        <svg width="13" height="13" viewBox="0 0 24 24" className="text-amber-400/40"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor" /></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" style={{ color: 'rgba(52,211,153,0.4)' }}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor" /></svg>
         <Diamond size={7} />
-        <div className="w-16 md:w-24 h-px bg-gradient-to-l from-transparent to-amber-400/40" />
+        <div className="w-16 md:w-24 h-px" style={{ background: 'linear-gradient(to left, transparent, rgba(52,211,153,0.4))' }} />
       </motion.div>
-      <motion.p {...p2} className="text-amber-400/80 text-[10px] md:text-xs tracking-[0.5em] uppercase font-medium mb-2">Lezzetin Ötesinde</motion.p>
+      <motion.p {...p2} className="text-[10px] md:text-xs tracking-[0.5em] uppercase font-medium mb-2" style={{ color: 'rgba(52,211,153,0.8)' }}>Lezzetin Ötesinde</motion.p>
       <motion.h2 {...p3} className="text-4xl sm:text-5xl md:text-6xl font-extralight text-white tracking-tight">
         <span className="block">Özel</span>
-        <span className="block mt-1 text-amber-100/90 italic" style={{ fontFamily: 'Georgia, serif' }}>Menümüz</span>
+        <span className="block mt-1 italic" style={{ color: 'rgba(153,246,228,0.9)', fontFamily: 'Georgia, serif' }}>Menümüz</span>
       </motion.h2>
       <motion.p {...p4} className="mt-4 text-white/50 text-sm font-light tracking-wider max-w-lg mx-auto">Her tabak, şefimizin tutkuyla hazırladığı bir sanat eseri</motion.p>
     </div>
@@ -142,7 +142,8 @@ function CategoryFilter({ active, onChange }: { active: string; onChange: (c: st
           className={`relative px-5 py-2 text-[10px] md:text-[11px] tracking-[0.2em] uppercase font-medium transition-all duration-500 rounded-lg
             ${active === cat ? 'text-black' : 'text-white/35 hover:text-white/60 border border-white/[0.06] hover:border-white/15'}`}>
           {active === cat && (
-            <motion.div className="absolute inset-0 bg-gradient-to-r from-amber-500 to-amber-400 rounded-lg"
+            <motion.div className="absolute inset-0 rounded-lg"
+              style={{ background: 'linear-gradient(135deg, #34d399, #2dd4bf)' }}
               layoutId="catTab" transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }} />
           )}
           <span className="relative z-10">{cat}</span>
@@ -172,13 +173,13 @@ function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number })
     >
       <div className="relative flex items-stretch gap-3 md:gap-4 py-3 px-3 md:px-4 rounded-xl transition-all duration-400"
         style={{
-          background: hover ? 'rgba(245,158,11,0.04)' : 'transparent',
-          border: `1px solid ${hover ? 'rgba(245,158,11,0.1)' : 'rgba(255,255,255,0.03)'}`,
+          background: hover ? 'rgba(52,211,153,0.04)' : 'transparent',
+          border: `1px solid ${hover ? 'rgba(52,211,153,0.1)' : 'rgba(255,255,255,0.03)'}`,
         }}>
 
         {/* Tiny image thumbnail */}
         <div className="relative w-[70px] h-[70px] md:w-[80px] md:h-[80px] rounded-lg overflow-hidden flex-shrink-0"
-          style={{ border: `1px solid ${hover ? 'rgba(245,158,11,0.15)' : 'rgba(255,255,255,0.06)'}` }}>
+          style={{ border: `1px solid ${hover ? 'rgba(52,211,153,0.15)' : 'rgba(255,255,255,0.06)'}` }}>
           <motion.div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: `url(${item.img})` }}
@@ -189,7 +190,7 @@ function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number })
 
           {/* Order number badge */}
           <div className="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full flex items-center justify-center z-10"
-            style={{ background: hover ? 'rgba(245,158,11,0.8)' : 'rgba(255,255,255,0.08)', border: '1px solid rgba(0,0,0,0.5)', transition: 'all 0.3s' }}>
+            style={{ background: hover ? 'rgba(52,211,153,0.8)' : 'rgba(255,255,255,0.08)', border: '1px solid rgba(0,0,0,0.5)', transition: 'all 0.3s' }}>
             <span className="text-[8px] font-bold" style={{ color: hover ? '#000' : 'rgba(255,255,255,0.5)' }}>
               {((index % 10) + 1)}
             </span>
@@ -202,20 +203,20 @@ function MenuItem({ item, index }: { item: typeof ALL_ITEMS[0]; index: number })
           <div className="flex items-start justify-between gap-3 mb-1">
             <h3
               className="text-white text-sm md:text-[15px] font-medium tracking-wide leading-tight truncate transition-colors duration-300"
-              style={{ color: hover ? 'rgba(253,230,138,1)' : 'rgba(255,255,255,0.85)', fontFamily: 'Georgia, serif' }}
+              style={{ color: hover ? 'rgba(167,243,208,1)' : 'rgba(255,255,255,0.85)', fontFamily: 'Georgia, serif' }}
             >
               {item.name}
             </h3>
-            <span className="text-amber-400/80 text-sm md:text-[15px] font-light whitespace-nowrap flex-shrink-0 transition-colors duration-300"
-              style={{ color: hover ? 'rgba(245,158,11,1)' : 'rgba(245,158,11,0.7)' }}>
+            <span className="text-sm md:text-[15px] font-light whitespace-nowrap flex-shrink-0 transition-colors duration-300"
+              style={{ color: hover ? 'rgba(52,211,153,1)' : 'rgba(52,211,153,0.7)' }}>
               {item.price}
             </span>
           </div>
 
           {/* Dot leader line */}
           <div className="flex items-center gap-1 mb-1.5">
-            <div className="w-1 h-1 rounded-full" style={{ background: hover ? 'rgba(245,158,11,0.4)' : 'rgba(255,255,255,0.08)', transition: 'all 0.3s' }} />
-            <div className="flex-1 border-b border-dotted" style={{ borderColor: hover ? 'rgba(245,158,11,0.12)' : 'rgba(255,255,255,0.05)', transition: 'all 0.3s' }} />
+            <div className="w-1 h-1 rounded-full" style={{ background: hover ? 'rgba(52,211,153,0.4)' : 'rgba(255,255,255,0.08)', transition: 'all 0.3s' }} />
+            <div className="flex-1 border-b border-dotted" style={{ borderColor: hover ? 'rgba(52,211,153,0.12)' : 'rgba(255,255,255,0.05)', transition: 'all 0.3s' }} />
           </div>
 
           {/* Description */}
@@ -264,8 +265,8 @@ function CategoryTitle({ name, count }: { name: string; count: number }) {
     <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={v ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }} className="flex items-center gap-4 py-5 md:py-6 mb-2">
       <div className="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0"
-        style={{ background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.15)' }}>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(245,158,11,0.6)" strokeWidth="1.5">
+        style={{ background: 'rgba(52,211,153,0.08)', border: '1px solid rgba(52,211,153,0.15)' }}>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(52,211,153,0.6)" strokeWidth="1.5">
           <path d={icons[name] || icons['Başlangıçlar']} />
         </svg>
       </div>
@@ -274,8 +275,8 @@ function CategoryTitle({ name, count }: { name: string; count: number }) {
       </div>
       <div className="flex items-center gap-3">
         <span className="text-white/20 text-[10px] tracking-[0.2em] uppercase">{count} ürün</span>
-        <div className="w-8 h-px bg-amber-400/20" />
-        <Diamond size={5} color="rgba(245,158,11,0.3)" />
+        <div className="w-8 h-px" style={{ background: 'rgba(52,211,153,0.2)' }} />
+        <Diamond size={5} color="rgba(52,211,153,0.3)" />
       </div>
     </motion.div>
   );
@@ -292,27 +293,27 @@ function AdBanner1() {
     <motion.div ref={ref} initial={{ opacity: 0, y: 20 }} animate={v ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.6 }} className="my-5 md:my-6">
       <div className="relative overflow-hidden rounded-xl py-4 md:py-5 px-4"
-        style={{ background: 'linear-gradient(135deg, #1a0800, #0d0500, #1a0800)', border: '1px solid rgba(245,158,11,0.1)' }}>
+        style={{ background: 'linear-gradient(135deg, #0a100e, #060d0b, #0a100e)', border: '1px solid rgba(52,211,153,0.1)' }}>
         <motion.div className="absolute -top-6 -left-6 w-24 h-24 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.07) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.07) 0%, transparent 70%)' }}
           animate={{ scale: [1, 1.2, 1] }} transition={{ duration: 4, repeat: Infinity }} />
-        <div className="absolute top-2 left-2"><Diamond size={5} color="rgba(245,158,11,0.2)" /></div>
-        <div className="absolute top-2 right-2"><Diamond size={5} color="rgba(245,158,11,0.2)" /></div>
-        <div className="absolute bottom-2 left-2"><Diamond size={5} color="rgba(245,158,11,0.1)" /></div>
-        <div className="absolute bottom-2 right-2"><Diamond size={5} color="rgba(245,158,11,0.1)" /></div>
+        <div className="absolute top-2 left-2"><Diamond size={5} color="rgba(52,211,153,0.2)" /></div>
+        <div className="absolute top-2 right-2"><Diamond size={5} color="rgba(52,211,153,0.2)" /></div>
+        <div className="absolute bottom-2 left-2"><Diamond size={5} color="rgba(52,211,153,0.1)" /></div>
+        <div className="absolute bottom-2 right-2"><Diamond size={5} color="rgba(52,211,153,0.1)" /></div>
         <div className="relative z-10 text-center">
-          <motion.div className="text-amber-400/50 text-[8px] tracking-[0.5em] uppercase font-medium mb-1"
+          <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: 'rgba(52,211,153,0.5)' }}
             animate={{ opacity: [0.5, 1, 0.5] }} transition={{ duration: 2, repeat: Infinity }}>✦ Her Akşam 18:00 - 20:00 ✦</motion.div>
           <motion.h3 className="text-2xl md:text-4xl font-extralight text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}
             animate={{ letterSpacing: ['0em', '0.04em', '0em'] }} transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}>
-            Happy <span className="italic text-amber-300">Hour</span>
+            Happy <span className="italic" style={{ color: 'rgba(94,234,212,1)' }}>Hour</span>
           </motion.h3>
           <p className="mt-1 text-white/35 text-[11px] font-light">Kokteyller ve içeceklerde %20 indirim</p>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-1.5 border-t border-amber-400/8">
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden py-1.5" style={{ borderTop: '1px solid rgba(52,211,153,0.08)' }}>
           <motion.div className="flex whitespace-nowrap" animate={{ x: ['0%', '-50%'] }}
             transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}>
-            {[0, 1].map(i => <span key={i} className="text-[9px] tracking-[0.3em] uppercase text-amber-400/15 font-light">{txt}</span>)}
+            {[0, 1].map(i => <span key={i} className="text-[9px] tracking-[0.3em] uppercase font-light" style={{ color: 'rgba(52,211,153,0.15)' }}>{txt}</span>)}
           </motion.div>
         </div>
       </div>
@@ -321,7 +322,7 @@ function AdBanner1() {
 }
 
 /* ═══════════════════════════════════════════════════
-   AD BANNER 2 — Live Music
+   AD BANNER 2 — Live Music (PURPLE — keep as-is)
    ═══════════════════════════════════════════════════ */
 function AdBanner2() {
   const ref = useRef(null);
@@ -370,7 +371,7 @@ function AdBanner2() {
 }
 
 /* ═══════════════════════════════════════════════════
-   AD BANNER 3 — Wine Tasting
+   AD BANNER 3 — Wine Tasting (copper/rose-gold tones)
    ═══════════════════════════════════════════════════ */
 function AdBanner3() {
   const ref = useRef(null);
@@ -379,40 +380,40 @@ function AdBanner3() {
     <motion.div ref={ref} initial={{ opacity: 0, x: -20 }} animate={v ? { opacity: 1, x: 0 } : {}}
       transition={{ duration: 0.6 }} className="my-5 md:my-6">
       <div className="relative overflow-hidden rounded-xl"
-        style={{ background: 'linear-gradient(135deg, #0a0502, #150a05, #0a0502)', border: '1px solid rgba(139,92,42,0.12)' }}>
+        style={{ background: 'linear-gradient(135deg, #0a0a10, #101218, #0a0a10)', border: '1px solid rgba(212,149,106,0.12)' }}>
         <motion.div className="absolute -top-3 -right-3 w-16 h-16 rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(139,92,42,0.08) 0%, transparent 70%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(212,149,106,0.08) 0%, transparent 70%)' }}
           animate={{ scale: [1, 1.15, 1] }} transition={{ duration: 5, repeat: Infinity }} />
         <motion.div className="absolute top-3 right-3 grid grid-cols-3 gap-1.5"
           animate={{ opacity: [0.1, 0.2, 0.1] }} transition={{ duration: 4, repeat: Infinity }}>
-          {[...Array(9)].map((_, i) => <div key={i} className="w-1 h-1 rounded-full bg-amber-700/40" />)}
+          {[...Array(9)].map((_, i) => <div key={i} className="w-1 h-1 rounded-full" style={{ background: 'rgba(184,115,69,0.4)' }} />)}
         </motion.div>
         <div className="absolute top-1/2 -translate-y-1/2 left-3 md:left-5">
           <motion.div animate={{ rotate: 360 }} transition={{ duration: 18, repeat: Infinity, ease: 'linear' }}
             className="w-11 h-11 rounded-full flex items-center justify-center"
-            style={{ border: '1px dashed rgba(139,92,42,0.2)' }}>
+            style={{ border: '1px dashed rgba(212,149,106,0.2)' }}>
             <motion.div animate={{ rotate: -360 }} transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
               className="w-7 h-7 rounded-full flex items-center justify-center"
-              style={{ border: '1px solid rgba(139,92,42,0.2)', background: 'rgba(139,92,42,0.05)' }}>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,42,0.4)" strokeWidth="1.5"><path d="M7 2l10 10M7 22l10-10" /></svg>
+              style={{ border: '1px solid rgba(212,149,106,0.2)', background: 'rgba(212,149,106,0.05)' }}>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(212,149,106,0.4)" strokeWidth="1.5"><path d="M7 2l10 10M7 22l10-10" /></svg>
             </motion.div>
           </motion.div>
         </div>
         <div className="relative z-10 px-6 md:px-10 py-4 md:py-5 md:pl-24 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
           <div>
-            <motion.div className="text-amber-700/40 text-[8px] tracking-[0.5em] uppercase font-medium mb-1"
+            <motion.div className="text-[8px] tracking-[0.5em] uppercase font-medium mb-1" style={{ color: 'rgba(184,115,69,0.4)' }}
               animate={{ opacity: [0.5, 0.8, 0.5] }} transition={{ duration: 2.5, repeat: Infinity }}>✦ Her Ayın İlk Cumartesi ✦</motion.div>
             <h3 className="text-xl md:text-2xl font-extralight text-white tracking-tight" style={{ fontFamily: 'Georgia, serif' }}>
-              Şarap <span className="italic text-amber-600">Degüstasyonu</span>
+              Şarap <span className="italic" style={{ color: '#d4956a' }}>Degüstasyonu</span>
             </h3>
             <p className="mt-0.5 text-white/30 text-[11px] font-light">Sommelier eşliğinde ödüllü şaraplar</p>
           </div>
           <div className="text-right flex-shrink-0">
-            <span className="text-amber-600 text-xl font-extralight" style={{ fontFamily: 'Georgia, serif' }}>₺450</span>
+            <span className="text-xl font-extralight" style={{ color: '#d4956a', fontFamily: 'Georgia, serif' }}>₺450</span>
             <p className="text-white/15 text-[8px] tracking-[0.2em] uppercase">Kişi Başı</p>
           </div>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-900/15 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(184,115,69,0.15), transparent)' }} />
       </div>
     </motion.div>
   );
@@ -427,19 +428,19 @@ function TastingBanner() {
   return (
     <motion.div ref={ref} {...props} className="mt-10 md:mt-14">
       <div className="relative overflow-hidden rounded-2xl py-7 md:py-9 px-6 md:px-10"
-        style={{ background: 'linear-gradient(135deg, #1a0f05, #0f0803, #1a0f05)', border: '1px solid rgba(245,158,11,0.08)' }}>
-        <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.04) 0%, transparent 70%)' }} />
-        <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(245,158,11,0.03) 0%, transparent 70%)' }} />
+        style={{ background: 'linear-gradient(135deg, #0c1018, #080c14, #0c1018)', border: '1px solid rgba(52,211,153,0.08)' }}>
+        <div className="absolute -top-12 -right-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.04) 0%, transparent 70%)' }} />
+        <div className="absolute -bottom-12 -left-12 w-36 h-36 rounded-full" style={{ background: 'radial-gradient(circle, rgba(52,211,153,0.03) 0%, transparent 70%)' }} />
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-5">
           <div className="text-center md:text-left">
-            <div className="text-amber-400/40 text-[9px] tracking-[0.4em] uppercase mb-2">✦ Özel Deneyim ✦</div>
+            <div className="text-[9px] tracking-[0.4em] uppercase mb-2" style={{ color: 'rgba(52,211,153,0.4)' }}>✦ Özel Deneyim ✦</div>
             <h3 className="text-xl md:text-2xl font-extralight text-white mb-1">
-              Şefin <span className="italic text-amber-100" style={{ fontFamily: 'Georgia, serif' }}>Tasting</span> Menüsü
+              Şefin <span className="italic" style={{ color: 'rgba(153,246,228,1)', fontFamily: 'Georgia, serif' }}>Tasting</span> Menüsü
             </h3>
             <p className="text-white/30 text-xs md:text-sm font-light">7 aşamalı menü, özel şarap eşleştirmesi dahil</p>
           </div>
           <div className="flex flex-col items-center gap-2">
-            <div className="text-amber-300 text-2xl md:text-3xl font-light">₺1.200</div>
+            <div className="text-2xl md:text-3xl font-light" style={{ color: 'rgba(94,234,212,1)' }}>₺1.200</div>
             <div className="text-white/20 text-[8px] tracking-[0.3em] uppercase">Kişi Başı</div>
             <div className="flex gap-2 mt-1">
               <a href={link} target="_blank" rel="noopener noreferrer"
@@ -447,7 +448,7 @@ function TastingBanner() {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                 WhatsApp
               </a>
-              <button className="px-4 py-2 bg-gradient-to-r from-amber-600 to-amber-500 text-black text-[9px] tracking-[0.15em] uppercase font-semibold hover:from-amber-500 hover:to-amber-400 transition-all duration-500">Rezervasyon</button>
+              <button className="px-4 py-2 text-black text-[9px] tracking-[0.15em] uppercase font-semibold transition-all duration-500" style={{ background: 'linear-gradient(135deg, #34d399, #2dd4bf)' }}>Rezervasyon</button>
             </div>
           </div>
         </div>
@@ -488,13 +489,13 @@ export default function MenuSection() {
 
   return (
     <section id="menu" className="relative py-10 md:py-16 lg:py-20 overflow-hidden"
-      style={{ background: 'linear-gradient(180deg, #050505, #0a0806, #050505)' }}>
+      style={{ background: 'linear-gradient(180deg, #080a10, #0a0d14, #080a10)' }}>
       <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
         style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`, backgroundRepeat: 'repeat', mixBlendMode: 'overlay' }} />
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/10 to-transparent" />
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-amber-400/10 to-transparent" />
-      <motion.div className="absolute top-20 left-[4%] pointer-events-none" animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }} transition={{ duration: 12, repeat: Infinity }}><Diamond size={8} color="rgba(245,158,11,0.12)" /></motion.div>
-      <motion.div className="absolute bottom-32 right-[5%] pointer-events-none" animate={{ y: [0, 10, 0] }} transition={{ duration: 10, repeat: Infinity }}><Diamond size={6} color="rgba(245,158,11,0.08)" /></motion.div>
+      <div className="absolute top-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.1), transparent)' }} />
+      <div className="absolute bottom-0 left-0 right-0 h-px" style={{ background: 'linear-gradient(to right, transparent, rgba(52,211,153,0.1), transparent)' }} />
+      <motion.div className="absolute top-20 left-[4%] pointer-events-none" animate={{ y: [0, -12, 0], rotate: [0, 45, 0] }} transition={{ duration: 12, repeat: Infinity }}><Diamond size={8} color="rgba(52,211,153,0.12)" /></motion.div>
+      <motion.div className="absolute bottom-32 right-[5%] pointer-events-none" animate={{ y: [0, 10, 0] }} transition={{ duration: 10, repeat: Infinity }}><Diamond size={6} color="rgba(52,211,153,0.08)" /></motion.div>
 
       <div className="relative z-10 max-w-[900px] mx-auto px-4 md:px-8">
         <SectionHeader />
@@ -506,7 +507,7 @@ export default function MenuSection() {
           <motion.div key={`${active}-${search}`} className="text-center mb-6"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <span className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-light">
-              <span className="text-amber-400/40">{filtered.length}</span> ürün
+              <span style={{ color: 'rgba(52,211,153,0.4)' }}>{filtered.length}</span> ürün
             </span>
           </motion.div>
         </AnimatePresence>
@@ -543,29 +544,38 @@ export default function MenuSection() {
                 {sIdx < sections.length - 1 && (
                   <div className="my-6 md:my-8">
                     <div className="flex items-center justify-center gap-3">
-                      <div className="w-6 h-px bg-amber-400/12" />
-                      <Diamond size={4} color="rgba(245,158,11,0.15)" />
-                      <div className="w-1 h-1 rounded-full border border-amber-400/10" />
-                      <Diamond size={4} color="rgba(245,158,11,0.15)" />
-                      <div className="w-6 h-px bg-amber-400/12" />
+                      <div className="w-6 h-px" style={{ background: 'rgba(52,211,153,0.12)' }} />
+                      <Diamond size={4} color="rgba(52,211,153,0.3)" />
+                      <div className="w-1 h-1 rounded-full" style={{ border: '1px solid rgba(52,211,153,0.1)' }} />
+                      <Diamond size={4} color="rgba(52,211,153,0.3)" />
+                      <div className="w-6 h-px" style={{ background: 'rgba(52,211,153,0.12)' }} />
                     </div>
                   </div>
                 )}
-
-                {/* Ad banner between categories in Tümü view */}
-                {active === 'Tümü' && sIdx === 1 && <AdBanner3 />}
               </div>
             ))}
 
-            {filtered.length === 0 && (
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-center py-16">
-                <p className="text-white/30 text-sm font-light">Aramanızla eşleşen ürün bulunamadı</p>
-              </motion.div>
-            )}
+            <AdBanner3 />
+            <TastingBanner />
+
           </motion.div>
         </AnimatePresence>
 
-        <TastingBanner />
+        {/* Footer note */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-10 md:mt-14 text-center"
+        >
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="w-10 h-px" style={{ background: 'rgba(52,211,153,0.15)' }} />
+            <Diamond size={5} color="rgba(52,211,153,0.25)" />
+            <div className="w-10 h-px" style={{ background: 'rgba(52,211,153,0.15)' }} />
+          </div>
+          <p className="text-white/20 text-[10px] tracking-[0.3em] uppercase font-light">Tüm fiyatlar KDV dahildir</p>
+          <p className="text-white/15 text-[9px] tracking-[0.2em] uppercase font-light mt-1">Menü değişiklikleri saklıdır</p>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,20 +1,34 @@
 'use client';
 
 import { useEffect, useState, useRef, useMemo } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from 'framer-motion';
 
-/* ═══════════════════════════════════════════════════════════════
-   REDESIGNED HERO — Deep Obsidian + Emerald + Copper
-   Clean, cinematic, modern luxury
-   ═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════════════════
+   GRAND EDITORIAL SPLIT — Le Maison Dorée
+   A luxury magazine-cover hero with split-screen editorial layout.
+   ═══════════════════════════════════════════════════════════════════════ */
 
+// ─── Slide Data ─────────────────────────────────────────────────────
 const SLIDES = [
   { image: '/hero-hall.jpg', label: 'Salon', subtitle: 'İhtişamlı mekanımızda unutulmaz bir akşam yaşayın' },
   { image: '/hero-chef.jpg', label: 'Mutfak', subtitle: 'Şefimizin elinden çıkan her tabak bir başyapıt' },
   { image: '/hero-bar.jpg', label: 'Bar', subtitle: 'Özenle hazırlanmış içeceklerle özel anlar' },
 ];
 
-/* ─── Color Palette ─── */
+// ─── Stats Data ─────────────────────────────────────────────────────
+const STATS = [
+  { value: '12+', label: 'Yıl Deneyim' },
+  { value: '5', label: 'Michelin Yıldız' },
+  { value: '2.4K', label: 'Değerlendirme' },
+  { value: '50K+', label: 'Misafir' },
+];
+
+// ─── Color Palette ──────────────────────────────────────────────────
 const C = {
   emerald: '#34d399',
   teal: '#2dd4bf',
@@ -26,94 +40,64 @@ const C = {
   dimText: '#8b8b9e',
 };
 
-/* ─── Floating Line Accent ─── */
-function FloatingLine({ className = '', delay = 0 }: { className?: string; delay?: number }) {
+// ─── Ornate Corner SVG ──────────────────────────────────────────────
+function CornerOrnament({ position }: { position: 'tl' | 'tr' | 'bl' | 'br' }) {
+  const rotations = { tl: '0deg', tr: '90deg', br: '180deg', bl: '270deg' };
   return (
-    <motion.div
-      className={`absolute pointer-events-none ${className}`}
-      animate={{ opacity: [0.15, 0.4, 0.15], scaleY: [0.8, 1.2, 0.8] }}
-      transition={{ duration: 6, repeat: Infinity, delay, ease: 'easeInOut' }}
+    <svg
+      className="absolute pointer-events-none"
+      style={{
+        width: 48,
+        height: 48,
+        opacity: 0.18,
+        transform: `rotate(${rotations[position]})`,
+        [position === 'tl' ? 'top' : position === 'tr' ? 'top' : 'bottom']:
+          position === 'tl' || position === 'tr' ? '-1px' : '-1px',
+        [position === 'tl' ? 'left' : position === 'tr' ? 'right' : position === 'br' ? 'right' : 'left']:
+          position === 'tl' || position === 'bl' ? '-1px' : '-1px',
+      }}
+      viewBox="0 0 48 48"
+      fill="none"
     >
-      <div className="w-px h-16 bg-gradient-to-b from-transparent via-emerald-400/40 to-transparent" />
-    </motion.div>
+      {/* Outer corner */}
+      <path d="M2 2 L2 18" stroke={C.emerald} strokeWidth="0.75" />
+      <path d="M2 2 L18 2" stroke={C.emerald} strokeWidth="0.75" />
+      {/* Inner corner */}
+      <path d="M6 6 L6 14" stroke={C.emerald} strokeWidth="1.5" />
+      <path d="M6 6 L14 6" stroke={C.emerald} strokeWidth="1.5" />
+      {/* Diamond at corner */}
+      <path d="M2 2 L6 0 L2 -4 L-2 0 Z" transform="translate(2,2)" fill={C.emerald} opacity="0.6" />
+      {/* Decorative curves */}
+      <path d="M18 2 Q20 2 20 4" stroke={C.emerald} strokeWidth="0.5" fill="none" />
+      <path d="M2 18 Q2 20 4 20" stroke={C.emerald} strokeWidth="0.5" fill="none" />
+    </svg>
   );
 }
 
-/* ─── Ambient Glow Orbs ─── */
-function AmbientOrbs() {
-  const orbs = useMemo(() => [
-    { x: '15%', y: '30%', size: 200, color: 'rgba(16,185,129,0.03)', dur: 20 },
-    { x: '80%', y: '20%', size: 150, color: 'rgba(212,149,106,0.03)', dur: 25 },
-    { x: '60%', y: '70%', size: 250, color: 'rgba(45,212,191,0.02)', dur: 18 },
-    { x: '25%', y: '75%', size: 180, color: 'rgba(212,149,106,0.02)', dur: 22 },
-  ], []);
-
+// ─── Noise Texture Overlay ─────────────────────────────────────────
+function NoiseTexture() {
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none z-[1]">
-      {orbs.map((orb, i) => (
-        <motion.div
-          key={i}
-          className="absolute rounded-full"
-          style={{ left: orb.x, top: orb.y, width: orb.size, height: orb.size, background: `radial-gradient(circle, ${orb.color}, transparent 70%)` }}
-          animate={{ x: [0, 20, -10, 15, 0], y: [0, -15, 10, -8, 0], scale: [1, 1.1, 0.95, 1.05, 1] }}
-          transition={{ duration: orb.dur, repeat: Infinity, ease: 'easeInOut' }}
-        />
-      ))}
-    </div>
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        opacity: 0.035,
+        backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+        backgroundRepeat: 'repeat',
+        mixBlendMode: 'overlay',
+      }}
+    />
   );
 }
 
-/* ─── Subtle Grid Lines ─── */
-function GridLines() {
-  return (
-    <div className="absolute inset-0 pointer-events-none z-[2] overflow-hidden opacity-[0.03]">
-      {/* Horizontal lines */}
-      {[20, 40, 60, 80].map(pct => (
-        <div key={`h-${pct}`} className="absolute left-0 right-0 h-px" style={{ top: `${pct}%`, background: `linear-gradient(90deg, transparent, ${C.emerald}, transparent)` }} />
-      ))}
-      {/* Vertical lines */}
-      {[25, 50, 75].map(pct => (
-        <div key={`v-${pct}`} className="absolute top-0 bottom-0 w-px" style={{ left: `${pct}%`, background: `linear-gradient(180deg, transparent, ${C.teal}, transparent)` }} />
-      ))}
-    </div>
-  );
-}
-
-/* ─── Image Slider ─── */
-function HeroSlider() {
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % SLIDES.length);
-    }, 6000);
-    return () => clearInterval(interval);
-  }, []);
-
-  return (
-    <div className="absolute inset-0">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={current}
-          className="absolute inset-0"
-          initial={{ opacity: 0, scale: 1.06 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
-        >
-          <div
-            className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${SLIDES[current].image})` }}
-          />
-        </motion.div>
-      </AnimatePresence>
-    </div>
-  );
-}
-
-/* ─── Navigation Bar ─── */
+// ─── Navigation Bar ────────────────────────────────────────────────
 function NavBar({ show }: { show: boolean }) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = useMemo(
+    () => ['Hikayemiz', 'Menü', 'Şef', 'Galeri', 'İletişim'],
+    [],
+  );
+
   return (
     <motion.header
       className="fixed top-0 left-0 right-0 z-50"
@@ -121,23 +105,53 @@ function NavBar({ show }: { show: boolean }) {
       animate={show ? { y: 0, opacity: 1 } : {}}
       transition={{ duration: 0.8, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
     >
-      <div className="absolute inset-0 backdrop-blur-2xl" style={{ background: 'rgba(10,10,16,0.7)', borderBottom: '1px solid rgba(52,211,153,0.06)' }} />
-      <div className="relative max-w-[1400px] mx-auto px-4 md:px-10 lg:px-16">
-        <div className="flex items-center justify-between h-14 md:h-16">
+      {/* Transparent blur backdrop */}
+      <div
+        className="absolute inset-0 backdrop-blur-xl"
+        style={{
+          background: 'rgba(10,10,16,0.6)',
+          borderBottom: '1px solid rgba(52,211,153,0.06)',
+        }}
+      />
+
+      <div className="relative max-w-[1800px] mx-auto px-4 md:px-8 lg:px-12 xl:px-16">
+        <div className="flex items-center justify-between h-16 md:h-18 lg:h-20">
           {/* Logo */}
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg flex items-center justify-center" style={{ background: 'linear-gradient(135deg, rgba(52,211,153,0.15), rgba(45,212,191,0.1))', border: '1px solid rgba(52,211,153,0.2)' }}>
-              <span style={{ color: C.emerald, fontFamily: 'Georgia, serif' }} className="text-sm font-bold">M</span>
+            <div
+              className="w-9 h-9 rounded-md flex items-center justify-center flex-shrink-0"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(52,211,153,0.12), rgba(45,212,191,0.06))',
+                border: '1.5px solid rgba(52,211,153,0.25)',
+              }}
+            >
+              <span
+                style={{ color: C.emerald, fontFamily: 'Georgia, serif' }}
+                className="text-base font-bold"
+              >
+                M
+              </span>
             </div>
-            <div className="hidden sm:block">
-              <div className="text-sm tracking-[0.15em] font-light" style={{ color: C.cream }}>LE MAISON</div>
-              <div className="text-[9px] tracking-[0.3em] uppercase" style={{ color: 'rgba(52,211,153,0.5)' }}>Dorée</div>
+            <div className="hidden sm:flex flex-col leading-none">
+              <span
+                className="text-sm tracking-[0.18em] font-light"
+                style={{ color: C.cream }}
+              >
+                LE MAISON
+              </span>
+              <span
+                className="text-[9px] tracking-[0.35em] uppercase mt-0.5"
+                style={{ color: 'rgba(52,211,153,0.55)' }}
+              >
+                Dorée
+              </span>
             </div>
           </div>
 
-          {/* Nav Links */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {['Hikayemiz', 'Menü', 'Şef', 'Galeri', 'İletişim'].map((link, i) => (
+          {/* Desktop Nav Links */}
+          <nav className="hidden lg:flex items-center gap-9">
+            {navLinks.map((link, i) => (
               <motion.a
                 key={link}
                 href={`#${link.toLowerCase()}`}
@@ -145,43 +159,108 @@ function NavBar({ show }: { show: boolean }) {
                 style={{ color: 'rgba(139,139,158,0.7)' }}
                 initial={{ opacity: 0, y: -10 }}
                 animate={show ? { opacity: 1, y: 0 } : {}}
-                transition={{ delay: 0.5 + i * 0.06 }}
-                onMouseEnter={(e) => { (e.target as HTMLElement).style.color = C.emerald; }}
-                onMouseLeave={(e) => { (e.target as HTMLElement).style.color = 'rgba(139,139,158,0.7)'; }}
+                transition={{ delay: 0.5 + i * 0.07 }}
+                onMouseEnter={(e) => {
+                  (e.target as HTMLElement).style.color = C.emerald;
+                }}
+                onMouseLeave={(e) => {
+                  (e.target as HTMLElement).style.color =
+                    'rgba(139,139,158,0.7)';
+                }}
               >
                 {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-px transition-all duration-500 group-hover:w-full" style={{ background: C.emerald }} />
+                <span
+                  className="absolute -bottom-1 left-0 w-0 h-px transition-all duration-500 group-hover:w-full"
+                  style={{ background: C.emerald }}
+                />
               </motion.a>
             ))}
           </nav>
 
-          {/* Right side */}
+          {/* Right Side */}
           <div className="flex items-center gap-3">
             <motion.button
-              className="hidden sm:flex items-center gap-2 px-5 py-2 text-[10px] tracking-[0.2em] uppercase font-medium transition-all duration-500 rounded-lg"
-              style={{ background: 'linear-gradient(135deg, rgba(52,211,153,0.12), rgba(45,212,191,0.08))', border: '1px solid rgba(52,211,153,0.2)', color: C.emerald }}
-              initial={{ opacity: 0, scale: 0.9 }} animate={show ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.8 }}>
-              <span className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: C.emerald }} />
+              className="hidden sm:flex items-center gap-2 px-5 py-2.5 text-[10px] tracking-[0.2em] uppercase font-medium transition-all duration-500 rounded-md"
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(52,211,153,0.1), rgba(45,212,191,0.06))',
+                border: '1px solid rgba(52,211,153,0.2)',
+                color: C.emerald,
+              }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={show ? { opacity: 1, scale: 1 } : {}}
+              transition={{ delay: 0.8 }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ background: C.emerald }}
+              />
               Rezervasyon
             </motion.button>
-            <button className="lg:hidden flex flex-col gap-[3px] p-1.5" onClick={() => setMenuOpen(!menuOpen)}>
-              <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[3.5px]' : ''}`} style={{ background: 'rgba(240,236,232,0.5)' }} />
-              <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} style={{ background: 'rgba(240,236,232,0.5)' }} />
-              <span className={`w-5 h-px transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[3.5px]' : ''}`} style={{ background: 'rgba(240,236,232,0.5)' }} />
+
+            {/* Mobile Hamburger */}
+            <button
+              className="lg:hidden flex flex-col gap-[3px] p-2"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-label="Menu"
+            >
+              <span
+                className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-[3.5px]' : ''}`}
+                style={{ background: 'rgba(240,236,232,0.5)' }}
+              />
+              <span
+                className={`w-5 h-px transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`}
+                style={{ background: 'rgba(240,236,232,0.5)' }}
+              />
+              <span
+                className={`w-5 h-px transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-[3.5px]' : ''}`}
+                style={{ background: 'rgba(240,236,232,0.5)' }}
+              />
             </button>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Dropdown */}
       <AnimatePresence>
         {menuOpen && (
           <motion.div
             className="lg:hidden absolute top-full left-0 right-0 backdrop-blur-2xl"
-            style={{ background: 'rgba(10,10,16,0.95)', borderBottom: '1px solid rgba(52,211,153,0.08)' }}
-            initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} transition={{ duration: 0.3 }}>
+            style={{
+              background: 'rgba(10,10,16,0.95)',
+              borderBottom: '1px solid rgba(52,211,153,0.08)',
+            }}
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
             <div className="px-6 py-6 flex flex-col gap-4">
-              {['Hikayemiz', 'Menü', 'Şef', 'Galeri', 'İletişim'].map((link) => (
-                <a key={link} href={`#${link.toLowerCase()}`} className="text-sm tracking-[0.2em] uppercase font-light" style={{ color: C.dimText }}>{link}</a>
+              {navLinks.map((link) => (
+                <a
+                  key={link}
+                  href={`#${link.toLowerCase()}`}
+                  className="text-sm tracking-[0.2em] uppercase font-light"
+                  style={{ color: C.dimText }}
+                >
+                  {link}
+                </a>
               ))}
+              <button
+                className="mt-2 w-full flex items-center justify-center gap-2 px-5 py-3 text-[10px] tracking-[0.2em] uppercase font-medium rounded-md"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(52,211,153,0.1), rgba(45,212,191,0.06))',
+                  border: '1px solid rgba(52,211,153,0.2)',
+                  color: C.emerald,
+                }}
+              >
+                <span
+                  className="w-1.5 h-1.5 rounded-full animate-pulse"
+                  style={{ background: C.emerald }}
+                />
+                Rezervasyon
+              </button>
             </div>
           </motion.div>
         )}
@@ -190,299 +269,639 @@ function NavBar({ show }: { show: boolean }) {
   );
 }
 
-/* ─── Info Glass Panel ─── */
-function InfoPanel({ show }: { show: boolean }) {
+// ─── Diamond Divider ───────────────────────────────────────────────
+function DiamondDivider({ show }: { show: boolean }) {
   return (
-    <motion.div className="absolute bottom-24 md:bottom-16 left-4 md:left-14 z-30 hidden md:block"
-      initial={{ opacity: 0, x: -40 }} animate={show ? { opacity: 1, x: 0 } : {}} transition={{ duration: 1, delay: 2 }}>
-      <div className="p-5 rounded-2xl max-w-[250px]"
-        style={{ background: 'rgba(10,10,16,0.6)', backdropFilter: 'blur(24px)', border: '1px solid rgba(52,211,153,0.08)' }}>
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(52,211,153,0.08)' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.emerald} strokeWidth="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
-          </div>
-          <div>
-            <div className="text-[11px] tracking-wider font-light" style={{ color: C.cream }}>Konum</div>
-            <div className="text-[11px] mt-0.5 font-light leading-relaxed" style={{ color: 'rgba(139,139,158,0.6)' }}>İstiklal Cad. No: 42, Beyoğlu<br />İstanbul, Türkiye</div>
-          </div>
-        </div>
-        <div className="w-full h-px mb-4" style={{ background: 'rgba(52,211,153,0.06)' }} />
-        <div className="flex items-start gap-3 mb-4">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(52,211,153,0.08)' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.emerald} strokeWidth="1.5"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg>
-          </div>
-          <div>
-            <div className="text-[11px] tracking-wider font-light" style={{ color: C.cream }}>Saatler</div>
-            <div className="text-[11px] mt-0.5 font-light leading-relaxed" style={{ color: 'rgba(139,139,158,0.6)' }}>Pzt - Cum: 12:00 - 23:00<br />Cmt - Paz: 18:00 - 00:00</div>
-          </div>
-        </div>
-        <div className="w-full h-px mb-4" style={{ background: 'rgba(52,211,153,0.06)' }} />
-        <div className="flex items-start gap-3">
-          <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(52,211,153,0.08)' }}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke={C.emerald} strokeWidth="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72" /></svg>
-          </div>
-          <div>
-            <div className="text-[11px] tracking-wider font-light" style={{ color: C.cream }}>Rezervasyon</div>
-            <div className="text-[11px] mt-0.5 font-light" style={{ color: C.emerald }}>+90 (212) 555 42 42</div>
-          </div>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─── Rating Badge ─── */
-function RatingBadge({ show }: { show: boolean }) {
-  return (
-    <motion.div className="absolute top-28 md:top-28 right-4 md:right-14 z-30"
-      initial={{ opacity: 0, scale: 0.5 }} animate={show ? { opacity: 1, scale: 1 } : {}} transition={{ duration: 0.6, delay: 2.5, type: 'spring' }}>
-      <div className="px-5 py-4 rounded-2xl text-center"
-        style={{ background: 'rgba(10,10,16,0.6)', backdropFilter: 'blur(20px)', border: '1px solid rgba(52,211,153,0.08)' }}>
-        <div className="flex items-center justify-center gap-1 mb-1.5">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <svg key={star} width="10" height="10" viewBox="0 0 24 24" fill={C.copper}><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
-          ))}
-        </div>
-        <div className="font-light text-base" style={{ color: C.cream }}>4.9</div>
-        <div className="text-[9px] tracking-wider" style={{ color: 'rgba(139,139,158,0.4)' }}>2.4K Değerlendirme</div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─── Menu Preview ─── */
-function MenuPreview({ show }: { show: boolean }) {
-  return (
-    <motion.div className="absolute bottom-24 md:bottom-16 right-4 md:right-14 z-30 hidden md:block"
-      initial={{ opacity: 0, y: 30 }} animate={show ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 2.8 }}>
-      <div className="px-5 py-4 rounded-2xl"
-        style={{ background: 'rgba(10,10,16,0.6)', backdropFilter: 'blur(20px)', border: '1px solid rgba(52,211,153,0.08)' }}>
-        <div className="text-[9px] tracking-[0.3em] uppercase mb-3 font-medium" style={{ color: 'rgba(212,149,106,0.6)' }}>Bugünün Özel Menüsü</div>
-        <div className="flex flex-col gap-2.5">
-          {[
-            { name: 'Karides Risotto', price: '₺280' },
-            { name: 'Wagyu Tataki', price: '₺420' },
-            { name: 'Çikolata Fondan', price: '₺160' },
-          ].map((item, i) => (
-            <div key={i} className="flex items-center justify-between gap-10">
-              <span className="text-xs font-light" style={{ color: 'rgba(240,236,232,0.6)' }}>{item.name}</span>
-              <span className="text-xs font-light" style={{ color: C.copper }}>{item.price}</span>
-            </div>
-          ))}
-        </div>
-        <div className="mt-3 pt-3" style={{ borderTop: '1px solid rgba(52,211,153,0.06)' }}>
-          <span className="text-[10px] tracking-wider font-light" style={{ color: 'rgba(212,149,106,0.4)' }}>Tam Menü →</span>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-/* ─── Slide Counter ─── */
-function SlideCounter({ current }: { current: number }) {
-  return (
-    <div className="absolute bottom-10 right-4 md:bottom-12 md:right-14 z-30 flex flex-col items-end gap-2">
-      <div className="flex items-center gap-2.5">
-        {SLIDES.map((_, i) => (
-          <div key={i} className="transition-all duration-700"
-            style={{ width: i === current ? '36px' : '6px', height: '2px', background: i === current ? C.emerald : 'rgba(139,139,158,0.2)' }} />
-        ))}
-      </div>
-      <span className="text-[10px] tracking-[0.3em] font-light" style={{ color: 'rgba(139,139,158,0.3)' }}>
-        <span className="text-base font-light mr-1" style={{ color: C.emerald }}>0{current + 1}</span> / 0{SLIDES.length}
-      </span>
-    </div>
-  );
-}
-
-/* ─── Bottom Scrolling Text ─── */
-function ScrollingText() {
-  const text = 'LE MAISON DORÉE  ✦  FINE DINING  ✦  MICHELIN STAR  ✦  TASTING MENU  ✦  WINE PAIRING  ✦  ISTANBUL  ✦  ';
-  return (
-    <div className="absolute bottom-0 left-0 right-0 z-30 overflow-hidden">
-      <div className="py-2.5" style={{ background: 'rgba(10,10,16,0.6)', borderTop: '1px solid rgba(52,211,153,0.04)' }}>
-        <motion.div className="flex whitespace-nowrap"
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}>
-          {[0, 1].map((i) => (
-            <span key={i} className="text-[10px] tracking-[0.3em] uppercase font-light select-none" style={{ color: 'rgba(139,139,158,0.12)' }}>{text}</span>
-          ))}
-        </motion.div>
-      </div>
-    </div>
-  );
-}
-
-/* ═══════════════════════════════════════════════════════════════
-   MAIN HERO
-   ═══════════════════════════════════════════════════════════════ */
-export default function HeroSection() {
-  const [loaded, setLoaded] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: containerRef, offset: ['start start', 'end start'] });
-
-  const contentY = useTransform(scrollYProgress, [0, 0.5], ['0%', '-10%']);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-
-  useEffect(() => { const t = setTimeout(() => setLoaded(true), 100); return () => clearTimeout(t); }, []);
-  useEffect(() => {
-    const i = setInterval(() => setCurrentSlide((p) => (p + 1) % SLIDES.length), 6000);
-    return () => clearInterval(i);
-  }, []);
-
-  return (
-    <section ref={containerRef} className="relative w-full h-screen overflow-hidden" style={{ background: C.dark }}>
-
-      {/* ── Image Slider ── */}
-      <HeroSlider />
-
-      {/* ── Dark overlay with color tint ── */}
-      <div className="absolute inset-0 z-[5]"
-        style={{ background: 'linear-gradient(180deg, rgba(10,10,16,0.6) 0%, rgba(10,10,16,0.35) 30%, rgba(10,10,16,0.35) 60%, rgba(10,10,16,0.8) 100%)' }} />
-      <div className="absolute inset-0 z-[5]"
-        style={{ background: 'radial-gradient(ellipse at center, transparent 30%, rgba(10,10,16,0.6) 100%)' }} />
-      {/* Emerald tint */}
-      <div className="absolute inset-0 z-[5]" style={{ background: 'rgba(16,185,129,0.02)' }} />
-
-      {/* ── Ambient effects ── */}
-      {loaded && <AmbientOrbs />}
-      {loaded && <GridLines />}
-
-      {/* ── Floating lines ── */}
-      <FloatingLine className="top-[15%] left-[8%]" delay={0} />
-      <FloatingLine className="top-[40%] right-[12%]" delay={2} />
-      <FloatingLine className="bottom-[25%] left-[20%]" delay={4} />
-      <FloatingLine className="bottom-[35%] right-[25%]" delay={1} />
-
-      {/* ── Film grain ── */}
+    <motion.div
+      className="flex items-center justify-center gap-3 my-6 md:my-8"
+      initial={{ opacity: 0, scaleX: 0 }}
+      animate={show ? { opacity: 1, scaleX: 1 } : {}}
+      transition={{ duration: 0.8, delay: 1.6, ease: [0.16, 1, 0.3, 1] }}
+    >
       <div
-        className="absolute inset-0 pointer-events-none z-[6] opacity-[0.02]"
+        className="w-16 md:w-24 h-px"
         style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat', mixBlendMode: 'overlay',
+          background: `linear-gradient(90deg, transparent, ${C.emerald}50)`,
+        }}
+      />
+      <div
+        className="w-2 h-2 rotate-45 flex-shrink-0"
+        style={{ background: C.emerald, opacity: 0.5 }}
+      />
+      <div
+        className="w-6 h-px flex-shrink-0"
+        style={{ background: `${C.copper}40` }}
+      />
+      <div
+        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
+        style={{ border: `1px solid ${C.teal}50` }}
+      />
+      <div
+        className="w-6 h-px flex-shrink-0"
+        style={{ background: `${C.copper}40` }}
+      />
+      <div
+        className="w-2 h-2 rotate-45 flex-shrink-0"
+        style={{ background: C.emerald, opacity: 0.5 }}
+      />
+      <div
+        className="w-16 md:w-24 h-px"
+        style={{
+          background: `linear-gradient(90deg, ${C.emerald}50, transparent)`,
+        }}
+      />
+    </motion.div>
+  );
+}
+
+// ─── Animated Frame Border ─────────────────────────────────────────
+function OrnateFrame({ show }: { show: boolean }) {
+  return (
+    <div className="absolute inset-4 md:inset-8 lg:inset-10 pointer-events-none">
+      {/* Outer border */}
+      <motion.div
+        className="absolute inset-0"
+        style={{ border: '1px solid rgba(52,211,153,0.08)' }}
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={show ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 1, delay: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      />
+
+      {/* Inner border */}
+      <motion.div
+        className="absolute"
+        style={{
+          inset: '8px',
+          border: '1.5px solid rgba(52,211,153,0.05)',
+        }}
+        initial={{ opacity: 0, scale: 0.85 }}
+        animate={show ? { opacity: 1, scale: 1 } : {}}
+        transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+      />
+
+      {/* Corner diamonds */}
+      {(['tl', 'tr', 'bl', 'br'] as const).map((pos) => (
+        <motion.div
+          key={pos}
+          className="absolute"
+          style={{
+            ...(pos === 'tl' && { top: -5, left: -5 }),
+            ...(pos === 'tr' && { top: -5, right: -5 }),
+            ...(pos === 'bl' && { bottom: -5, left: -5 }),
+            ...(pos === 'br' && { bottom: -5, right: -5 }),
+          }}
+          initial={{ opacity: 0, scale: 0 }}
+          animate={show ? { opacity: 1, scale: 1 } : {}}
+          transition={{
+            duration: 0.6,
+            delay: 1.1,
+            type: 'spring',
+            stiffness: 200,
+          }}
+        >
+          <div
+            className="w-2.5 h-2.5 rotate-45"
+            style={{
+              border: `1px solid ${C.emerald}40`,
+              background: `${C.emerald}10`,
+            }}
+          />
+        </motion.div>
+      ))}
+
+      {/* Corner Ornaments */}
+      {(['tl', 'tr', 'bl', 'br'] as const).map((pos) => (
+        <motion.div
+          key={`orn-${pos}`}
+          className="absolute"
+          style={{
+            ...(pos === 'tl' && { top: 0, left: 0 }),
+            ...(pos === 'tr' && { top: 0, right: 0 }),
+            ...(pos === 'bl' && { bottom: 0, left: 0 }),
+            ...(pos === 'br' && { bottom: 0, right: 0 }),
+          }}
+          initial={{ opacity: 0 }}
+          animate={show ? { opacity: 1 } : {}}
+          transition={{ duration: 0.8, delay: 1.2 }}
+        >
+          <CornerOrnament position={pos} />
+        </motion.div>
+      ))}
+    </div>
+  );
+}
+
+// ─── Left Panel Content ────────────────────────────────────────────
+function LeftPanel({ show, currentSlide }: { show: boolean; currentSlide: number }) {
+  return (
+    <div className="relative z-10 flex flex-col justify-center h-full px-6 sm:px-10 md:px-12 lg:px-16 xl:px-20 py-28 md:py-24">
+      {/* Ornate Frame */}
+      <OrnateFrame show={show} />
+
+      {/* Noise Texture */}
+      <NoiseTexture />
+
+      {/* Slide Label */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`label-${currentSlide}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+          className="mb-4 md:mb-6 relative z-10"
+        >
+          <span
+            className="text-[10px] md:text-xs tracking-[0.5em] uppercase font-medium"
+            style={{ color: C.copper }}
+          >
+            ✦ {SLIDES[currentSlide].label} ✦
+          </span>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Title: Le */}
+      <motion.h1
+        className="relative z-10 leading-none"
+        initial={{ opacity: 0, x: -40 }}
+        animate={show ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 1, delay: 1, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span
+          className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] font-extralight tracking-tight"
+          style={{ color: C.cream }}
+        >
+          Le
+        </span>
+      </motion.h1>
+
+      {/* Title: Maison */}
+      <motion.h1
+        className="relative z-10 leading-none mt-1 md:mt-2"
+        initial={{ opacity: 0, x: -40 }}
+        animate={show ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 1, delay: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span
+          className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem]"
+          style={{
+            fontFamily: 'Georgia, "Times New Roman", serif',
+            fontWeight: 300,
+            fontStyle: 'italic',
+            color: C.teal,
+          }}
+        >
+          Maison
+        </span>
+      </motion.h1>
+
+      {/* Title: Dorée */}
+      <motion.h1
+        className="relative z-10 leading-none mt-1 md:mt-2"
+        initial={{ opacity: 0, x: -40 }}
+        animate={show ? { opacity: 1, x: 0 } : {}}
+        transition={{ duration: 1, delay: 1.4, ease: [0.16, 1, 0.3, 1] }}
+      >
+        <span
+          className="block text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem] tracking-tight"
+          style={{
+            background: 'linear-gradient(135deg, #34d399 0%, #2dd4bf 40%, #d4956a 100%)',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
+          }}
+        >
+          Dorée
+        </span>
+      </motion.h1>
+
+      {/* Diamond Divider */}
+      <DiamondDivider show={show} />
+
+      {/* Subtitle */}
+      <AnimatePresence mode="wait">
+        <motion.p
+          key={`sub-${currentSlide}`}
+          className="relative z-10 text-sm md:text-base lg:text-lg font-light tracking-wider max-w-sm leading-relaxed"
+          style={{ color: 'rgba(240,236,232,0.65)' }}
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -15 }}
+          transition={{ duration: 0.5, ease: 'easeOut' }}
+        >
+          {SLIDES[currentSlide].subtitle}
+        </motion.p>
+      </AnimatePresence>
+
+      {/* CTA Buttons */}
+      <motion.div
+        className="relative z-10 flex flex-col sm:flex-row items-start gap-3 mt-7 md:mt-9"
+        initial={{ opacity: 0, y: 30 }}
+        animate={show ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 2, ease: 'easeOut' }}
+      >
+        <button
+          className="group relative px-8 md:px-10 py-3.5 md:py-4 text-black text-[10px] md:text-xs tracking-[0.25em] uppercase font-semibold transition-all duration-500 rounded-md overflow-hidden"
+          style={{
+            background: `linear-gradient(135deg, ${C.emerald}, ${C.teal})`,
+          }}
+        >
+          <span className="relative z-10 flex items-center gap-2">
+            Masa Rezervasyonu
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="group-hover:translate-x-1 transition-transform duration-300"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </span>
+          <div
+            className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+            style={{
+              background: `linear-gradient(135deg, ${C.teal}, #5eead4)`,
+            }}
+          />
+        </button>
+
+        <a
+          href="https://wa.me/905551234567?text=Merhaba%2C%20Le%20Maison%20Dor%C3%A9e%20i%C3%A7in%20rezervasyon%20yapmak%20istiyorum"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-2.5 px-7 md:px-9 py-3.5 md:py-4 text-[10px] md:text-xs tracking-[0.25em] uppercase font-medium transition-all duration-500 rounded-md"
+          style={{
+            border: '1px solid rgba(212,149,106,0.3)',
+            color: C.copper,
+            background: 'rgba(10,10,16,0.3)',
+          }}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="group-hover:scale-110 transition-transform duration-300"
+          >
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+          </svg>
+          WhatsApp İletişim
+        </a>
+      </motion.div>
+
+      {/* Stats Row */}
+      <motion.div
+        className="relative z-10 flex items-center gap-6 md:gap-8 mt-8 md:mt-12 pt-6 md:pt-8"
+        style={{ borderTop: '1px solid rgba(52,211,153,0.06)' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={show ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 2.3, ease: 'easeOut' }}
+      >
+        {STATS.map((stat, i) => (
+          <div key={i} className="flex flex-col gap-0.5">
+            <span
+              className="text-base md:text-xl font-light"
+              style={{ color: C.cream }}
+            >
+              {stat.value}
+            </span>
+            <span
+              className="text-[8px] md:text-[9px] tracking-[0.2em] uppercase font-medium"
+              style={{ color: 'rgba(139,139,158,0.45)' }}
+            >
+              {stat.label}
+            </span>
+          </div>
+        ))}
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Right Panel Image Slider ──────────────────────────────────────
+function RightPanel({
+  show,
+  currentSlide,
+}: {
+  show: boolean;
+  currentSlide: number;
+}) {
+  const imageRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: imageRef,
+    offset: ['start start', 'end start'],
+  });
+  const imageY = useTransform(scrollYProgress, [0, 1], ['0%', '15%']);
+
+  return (
+    <div ref={imageRef} className="relative w-full h-full overflow-hidden">
+      {/* Images with Ken Burns + crossfade */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentSlide}
+          className="absolute inset-0"
+          initial={{ opacity: 0, scale: 1.08 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 1.03 }}
+          transition={{ duration: 2.5, ease: 'easeInOut' }}
+        >
+          <div
+            className="absolute inset-0 bg-cover bg-center will-change-transform"
+            style={{
+              backgroundImage: `url(${SLIDES[currentSlide].image})`,
+              y: imageY,
+            }}
+          />
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Dark vignette overlay */}
+      <div
+        className="absolute inset-0 z-[2]"
+        style={{
+          background:
+            'radial-gradient(ellipse at center, transparent 40%, rgba(10,10,16,0.65) 100%)',
         }}
       />
 
-      {/* ═══ NAV BAR ═══ */}
-      <NavBar show={loaded} />
+      {/* Top/Bottom edge darkening */}
+      <div
+        className="absolute inset-0 z-[2]"
+        style={{
+          background:
+            'linear-gradient(180deg, rgba(10,10,16,0.4) 0%, transparent 25%, transparent 75%, rgba(10,10,16,0.4) 100%)',
+        }}
+      />
 
-      {/* ═══ MAIN CONTENT ═══ */}
-      <motion.div className="relative z-20 flex items-center justify-center h-full px-6 md:px-10 lg:px-16" style={{ opacity: contentOpacity, y: contentY }}>
-        <div className="text-center max-w-5xl">
-
-          {/* Top Badge */}
-          <motion.div initial={{ opacity: 0, y: 20, scale: 0.9 }} animate={loaded ? { opacity: 1, y: 0, scale: 1 } : {}} transition={{ duration: 0.8, delay: 0.6 }} className="mb-5 md:mb-8">
-            <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full"
-              style={{ background: 'rgba(10,10,16,0.5)', backdropFilter: 'blur(16px)', border: '1px solid rgba(52,211,153,0.15)' }}>
-              <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: C.emerald }} />
-              <span className="text-[11px] tracking-[0.3em] uppercase font-medium" style={{ color: C.emerald }}>
-                Michelin Yıldızlı Deneyim
-              </span>
-            </div>
-          </motion.div>
-
-          {/* Slide Label */}
-          <AnimatePresence mode="wait">
-            <motion.div key={currentSlide} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} transition={{ duration: 0.5 }} className="mb-3">
-              <span className="text-xs md:text-sm tracking-[0.5em] uppercase font-medium" style={{ color: C.copper }}>
-                ✦ {SLIDES[currentSlide].label} ✦
-              </span>
-            </motion.div>
-          </AnimatePresence>
-
-          {/* Main Title */}
-          <motion.div initial={{ opacity: 0, y: 60 }} animate={loaded ? { opacity: 1, y: 0 } : {}} transition={{ duration: 1.2, delay: 1, ease: [0.16, 1, 0.3, 1] }}>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-extralight leading-[0.9] tracking-tight">
-              <span className="block" style={{ color: C.cream, textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>Le</span>
-              <span className="block mt-1 md:mt-2" style={{ fontFamily: 'Georgia, "Times New Roman", serif', fontWeight: 300, fontStyle: 'italic', color: C.teal, textShadow: '0 2px 20px rgba(0,0,0,0.8)' }}>
-                Maison
-              </span>
-              <span className="block mt-1 md:mt-2" style={{
-                background: 'linear-gradient(135deg, #34d399, #2dd4bf, #d4956a)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                textShadow: 'none',
-              }}>
-                Dorée
-              </span>
-            </h1>
-          </motion.div>
-
-          {/* Decorative Divider */}
-          <motion.div className="flex items-center justify-center gap-4 mt-6 md:mt-8"
-            initial={{ opacity: 0, scaleX: 0 }} animate={loaded ? { opacity: 1, scaleX: 1 } : {}} transition={{ duration: 1, delay: 1.6 }}>
-            <div className="w-12 md:w-20 h-px" style={{ background: `linear-gradient(90deg, transparent, ${C.emerald}40)` }} />
-            <div className="w-2 h-2 rotate-45" style={{ background: C.emerald, opacity: 0.4 }} />
-            <div className="w-3 h-px" style={{ background: `${C.copper}40` }} />
-            <div className="w-2 h-2 rounded-full" style={{ border: `1px solid ${C.teal}40`, background: `${C.teal}15` }} />
-            <div className="w-3 h-px" style={{ background: `${C.copper}40` }} />
-            <div className="w-2 h-2 rotate-45" style={{ background: C.emerald, opacity: 0.4 }} />
-            <div className="w-12 md:w-20 h-px" style={{ background: `linear-gradient(90deg, ${C.emerald}40, transparent)` }} />
-          </motion.div>
-
-          {/* Subtitle */}
-          <AnimatePresence mode="wait">
-            <motion.p key={currentSlide}
-              className="mt-5 md:mt-7 text-sm sm:text-base md:text-lg lg:text-xl font-light tracking-wider max-w-lg mx-auto leading-relaxed"
-              style={{ color: 'rgba(240,236,232,0.7)', textShadow: '0 1px 10px rgba(0,0,0,0.9)' }}
-              initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -15 }} transition={{ duration: 0.5 }}>
-              {SLIDES[currentSlide].subtitle}
-            </motion.p>
-          </AnimatePresence>
-
-          {/* CTA Buttons */}
-          <motion.div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-8 md:mt-10"
-            initial={{ opacity: 0, y: 30 }} animate={loaded ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 2 }}>
-            <button className="group relative px-10 py-4 text-black text-xs tracking-[0.25em] uppercase font-semibold transition-all duration-500 rounded-lg"
-              style={{ background: `linear-gradient(135deg, ${C.emerald}, ${C.teal})` }}>
-              <span className="relative z-10">Masa Rezervasyonu</span>
-              <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                style={{ background: `linear-gradient(135deg, ${C.teal}, #5eead4)` }} />
-            </button>
-            <button className="group flex items-center gap-3 px-8 py-4 text-xs tracking-[0.25em] uppercase font-medium transition-all duration-500 rounded-lg"
-              style={{ border: `1px solid rgba(212,149,106,0.25)`, color: C.copper, background: 'rgba(10,10,16,0.3)', backdropFilter: 'blur(8px)' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="group-hover:scale-110 transition-transform duration-300">
-                <polygon points="5 3 19 12 5 21 5 3" />
+      {/* ── Floating Rating Badge (top-right) ── */}
+      <motion.div
+        className="absolute top-24 md:top-28 right-4 md:right-8 z-10"
+        initial={{ opacity: 0, scale: 0.5, y: -20 }}
+        animate={show ? { opacity: 1, scale: 1, y: 0 } : {}}
+        transition={{
+          duration: 0.6,
+          delay: 2.5,
+          type: 'spring',
+          stiffness: 180,
+        }}
+      >
+        <div
+          className="px-5 py-4 rounded-xl text-center backdrop-blur-md"
+          style={{
+            background: 'rgba(10,10,16,0.65)',
+            border: '1px solid rgba(52,211,153,0.1)',
+          }}
+        >
+          <div className="flex items-center justify-center gap-0.5 mb-1.5">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill={C.copper}
+              >
+                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
               </svg>
-              Menüyü Keşfet
-            </button>
-          </motion.div>
-
-          {/* Stats */}
-          <motion.div className="flex items-center justify-center gap-8 md:gap-14 mt-10 md:mt-14"
-            initial={{ opacity: 0 }} animate={loaded ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 2.5 }}>
-            {[
-              { value: '12+', label: 'Yıl Deneyim' },
-              { value: '5', label: 'Michelin Yıldız' },
-              { value: '2.4K', label: 'Değerlendirme' },
-              { value: '50K+', label: 'Misafir' },
-            ].map((stat, i) => (
-              <div key={i} className="flex flex-col items-center gap-1">
-                <span className="text-lg md:text-2xl font-light" style={{ color: C.cream }}>{stat.value}</span>
-                <span className="text-[8px] md:text-[9px] tracking-[0.25em] uppercase font-medium" style={{ color: 'rgba(139,139,158,0.5)' }}>{stat.label}</span>
-              </div>
             ))}
-          </motion.div>
+          </div>
+          <div className="font-light text-lg" style={{ color: C.cream }}>
+            4.9
+          </div>
+          <div
+            className="text-[9px] tracking-wider"
+            style={{ color: 'rgba(139,139,158,0.4)' }}
+          >
+            2.4K Değerlendirme
+          </div>
         </div>
       </motion.div>
 
-      {/* ═══ PANELS ═══ */}
-      <InfoPanel show={loaded} />
-      <RatingBadge show={loaded} />
-      <MenuPreview show={loaded} />
-      <SlideCounter current={currentSlide} />
-      <ScrollingText />
-
-      {/* ── Scroll Indicator ── */}
-      <motion.div className="absolute bottom-12 left-1/2 -translate-x-1/2 z-30 hidden md:flex flex-col items-center gap-2"
-        initial={{ opacity: 0 }} animate={loaded ? { opacity: 1 } : {}} transition={{ duration: 1, delay: 3 }}>
-        <span className="text-[9px] tracking-[0.4em] uppercase font-medium" style={{ color: 'rgba(139,139,158,0.4)' }}>Kaydır</span>
-        <motion.div className="w-[1px] h-8"
-          style={{ background: `linear-gradient(to bottom, ${C.emerald}60, transparent)` }}
-          animate={{ scaleY: [0.5, 1, 0.5], opacity: [0.4, 1, 0.4] }} transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          transformOrigin="top" />
+      {/* ── Floating Menu Preview (bottom-right) ── */}
+      <motion.div
+        className="absolute bottom-24 md:bottom-16 right-4 md:right-8 z-10 hidden md:block"
+        initial={{ opacity: 0, y: 30 }}
+        animate={show ? { opacity: 1, y: 0 } : {}}
+        transition={{ duration: 0.8, delay: 2.8, ease: 'easeOut' }}
+      >
+        <div
+          className="px-5 py-4 rounded-xl backdrop-blur-md"
+          style={{
+            background: 'rgba(10,10,16,0.65)',
+            border: '1px solid rgba(52,211,153,0.1)',
+          }}
+        >
+          <div
+            className="text-[9px] tracking-[0.3em] uppercase mb-3 font-medium"
+            style={{ color: 'rgba(212,149,106,0.6)' }}
+          >
+            Bugünün Menüsü
+          </div>
+          <div className="flex flex-col gap-2">
+            {[
+              { name: 'Karides Risotto', price: '₺280' },
+              { name: 'Wagyu Tataki', price: '₺420' },
+              { name: 'Çikolata Fondan', price: '₺160' },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="flex items-center justify-between gap-8"
+              >
+                <span
+                  className="text-xs font-light"
+                  style={{ color: 'rgba(240,236,232,0.6)' }}
+                >
+                  {item.name}
+                </span>
+                <span className="text-xs font-light" style={{ color: C.copper }}>
+                  {item.price}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div
+            className="mt-3 pt-3"
+            style={{ borderTop: '1px solid rgba(52,211,153,0.06)' }}
+          >
+            <span
+              className="text-[10px] tracking-wider font-light"
+              style={{ color: 'rgba(212,149,106,0.4)' }}
+            >
+              Tam Menü →
+            </span>
+          </div>
+        </div>
       </motion.div>
+
+      {/* ── Slide Counter Dots ── */}
+      <motion.div
+        className="absolute bottom-10 left-1/2 -translate-x-1/2 z-10 flex flex-col items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={show ? { opacity: 1 } : {}}
+        transition={{ duration: 0.8, delay: 2.6 }}
+      >
+        <div className="flex items-center gap-3">
+          {SLIDES.map((_, i) => (
+            <button
+              key={i}
+              className="transition-all duration-700"
+              style={{
+                width: i === currentSlide ? 36 : 6,
+                height: 2,
+                background:
+                  i === currentSlide
+                    ? C.emerald
+                    : 'rgba(139,139,158,0.25)',
+                borderRadius: 1,
+              }}
+            />
+          ))}
+        </div>
+        <span
+          className="text-[10px] tracking-[0.3em] font-light"
+          style={{ color: 'rgba(139,139,158,0.3)' }}
+        >
+          <span
+            className="text-base font-light mr-1"
+            style={{ color: C.emerald }}
+          >
+            0{currentSlide + 1}
+          </span>{' '}
+          / 0{SLIDES.length}
+        </span>
+      </motion.div>
+    </div>
+  );
+}
+
+// ─── Emerald Divider Line ──────────────────────────────────────────
+function EmeraldDividerLine({ show }: { show: boolean }) {
+  return (
+    <motion.div
+      className="hidden lg:block absolute top-0 bottom-0 z-20 w-px"
+      style={{ left: '45%' }}
+      initial={{ scaleY: 0, opacity: 0 }}
+      animate={show ? { scaleY: 1, opacity: 1 } : {}}
+      transition={{ duration: 1.5, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+    >
+      <div
+        className="w-full h-full"
+        style={{
+          background: `linear-gradient(180deg, 
+            transparent 0%, 
+            rgba(52,211,153,0.03) 15%, 
+            rgba(52,211,153,0.12) 40%, 
+            rgba(45,212,191,0.18) 50%, 
+            rgba(52,211,153,0.12) 60%, 
+            rgba(52,211,153,0.03) 85%, 
+            transparent 100%)`,
+        }}
+      />
+    </motion.div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+//   MAIN HERO — GRAND EDITORIAL SPLIT
+// ═══════════════════════════════════════════════════════════════════════
+export default function HeroSection() {
+  const [loaded, setLoaded] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  // Scroll parallax for the whole hero
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start start', 'end start'],
+  });
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setLoaded(true), 100);
+    return () => clearTimeout(t);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
+    }, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <section
+      ref={sectionRef}
+      className="relative w-full min-h-screen lg:h-screen overflow-hidden"
+      style={{ background: C.dark }}
+    >
+      {/* ═══ NAV BAR ═══ */}
+      <NavBar show={loaded} />
+
+      {/* ═══ SPLIT LAYOUT ═══ */}
+      <motion.div
+        className="flex flex-col lg:flex-row w-full min-h-screen lg:h-full"
+        style={{ opacity: heroOpacity }}
+      >
+        {/* ── LEFT PANEL (45% on desktop) ── */}
+        <div
+          className="relative w-full lg:w-[45%] min-h-[60vh] lg:min-h-0 flex-shrink-0"
+          style={{ background: C.dark }}
+        >
+          {/* Subtle gradient glow behind panel */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background:
+                'radial-gradient(ellipse at 30% 50%, rgba(52,211,153,0.03) 0%, transparent 60%)',
+            }}
+          />
+          <LeftPanel show={loaded} currentSlide={currentSlide} />
+        </div>
+
+        {/* ── EMERALD DIVIDER LINE ── */}
+        <EmeraldDividerLine show={loaded} />
+
+        {/* ── RIGHT PANEL (55% on desktop) ── */}
+        <div className="relative w-full lg:w-[55%] min-h-[50vh] lg:min-h-0 flex-shrink-0">
+          <RightPanel show={loaded} currentSlide={currentSlide} />
+        </div>
+      </motion.div>
+
+      {/* ── Scroll Indicator (Desktop) ── */}
+      <motion.div
+        className="absolute bottom-6 left-[22.5%] -translate-x-1/2 z-30 hidden lg:flex flex-col items-center gap-2"
+        initial={{ opacity: 0 }}
+        animate={loaded ? { opacity: 1 } : {}}
+        transition={{ duration: 1, delay: 3 }}
+      >
+        <span
+          className="text-[9px] tracking-[0.4em] uppercase font-medium"
+          style={{ color: 'rgba(139,139,158,0.35)' }}
+        >
+          Kaydır
+        </span>
+        <motion.div
+          className="w-px h-8 origin-top"
+          style={{
+            background: `linear-gradient(to bottom, ${C.emerald}60, transparent)`,
+          }}
+          animate={{
+            scaleY: [0.5, 1, 0.5],
+            opacity: [0.4, 1, 0.4],
+          }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        />
+      </motion.div>
+
+      {/* ── Bottom Ambient Gradient ── */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-32 pointer-events-none z-20"
+        style={{
+          background: `linear-gradient(to top, ${C.dark}, transparent)`,
+        }}
+      />
     </section>
   );
 }
